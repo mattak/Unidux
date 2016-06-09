@@ -2,4 +2,10 @@
 
 Redux inspired architecture for Unity.
 
-Comming soon.
+# Install
+
+Import unitypackage form [latest releases](https://github.com/mattak/Unidux/releases).
+
+# License
+
+[MIT](./LICENSE.md)
