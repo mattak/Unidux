@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Unidux
 {
@@ -60,6 +61,32 @@ namespace Unidux
             if (RenderEvent != null)
             {
                 RenderEvent(State);
+            }
+
+            // The function may slow
+            SetNullToOneTimeField(State);
+        }
+
+        // Experimental feature to flush onetime state value
+        private void SetNullToOneTimeField(T state)
+        {
+            var members = state.GetType().GetProperties();
+            foreach (var member in members)
+            {
+                var attribute = member.GetCustomAttributes(typeof(OneTimeAttribute), false);
+
+                if (attribute.Length > 0)
+                {
+                    // Only supports nullable value
+                    if (!member.GetType().IsPrimitive)
+                    {
+                        member.SetValue(state, null, null);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("OneTimeAttribute does not support primitive type.");
+                    }
+                }
             }
         }
     }
