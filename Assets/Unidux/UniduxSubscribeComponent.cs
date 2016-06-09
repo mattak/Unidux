@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 namespace Unidux
 {
@@ -10,25 +11,43 @@ namespace Unidux
             Render<T> render)
             where T : StateBase, new()
         {
-            GetOrAddUniduxSubscriber(gameObject).AddRenderTo(store, render);
+            GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddRenderTo(store, render);
         }
 
-        public static void AddTo<T>(
+        public static void AddTo<T, A>(
             this GameObject gameObject,
             Store<T> store,
-            Reducer<T> reducer)
+            Reducer<T, A> reducer)
             where T : StateBase, new()
         {
-            GetOrAddUniduxSubscriber(gameObject).AddReducerTo(store, reducer);
+            GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddReducerTo(store, reducer);
         }
 
-        private static UniduxSubscriber GetOrAddUniduxSubscriber(GameObject gameObject)
+        public static void AddSustainTo<T>(
+            this GameObject gameObject,
+            Store<T> store,
+            Render<T> render)
+            where T : StateBase, new()
         {
-            var component = gameObject.GetComponent<UniduxSubscriber>();
+            GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddRenderTo(store, render);
+        }
+
+        public static void AddSustainTo<T, A>(
+            this GameObject gameObject,
+            Store<T> store,
+            Reducer<T, A> reducer)
+            where T : StateBase, new()
+        {
+            GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddReducerTo(store, reducer);
+        }
+
+        private static T GetOrAddUniduxSubscriber<T>(GameObject gameObject) where T : UniduxSubscriberBase
+        {
+            var component = gameObject.GetComponent<T>();
             if (component == null)
             {
-                gameObject.AddComponent<UniduxSubscriber>();
-                component = gameObject.GetComponent<UniduxSubscriber>();
+                gameObject.AddComponent<T>();
+                component = gameObject.GetComponent<T>();
             }
             return component;
         }
