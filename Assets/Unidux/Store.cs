@@ -1,61 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Unidux
 {
     public class Store<T> : IStore<T> where T : StateBase, new()
     {
+        private delegate T ReducerCaller(T state, object action);
+
         public event Render<T> RenderEvent;
-        private readonly IList<Reducer<T>> _reducerList;
+        private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
         private T _state;
-        private bool changed;
+        private bool _changed;
 
         public T State
         {
-            get
-            {
-                if (_state == null)
-                {
-                    _state = new T();
-                }
-
-                return _state;
-            }
+            get { return _state ?? (_state = new T()); }
         }
 
         public Store()
         {
-            this.changed = false;
-            this._reducerList = new List<Reducer<T>>();
+            this._changed = false;
+            this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
         }
 
-        public void AddReducer(Reducer<T> reducer)
+        public void AddReducer<A>(Reducer<T, A> reducer)
         {
-            this._reducerList.Add(reducer);
+            this._reducerDictionary[typeof(A)] = (state, action) => reducer(state, (A) action);
         }
 
-        public void RemoveReducer(Reducer<T> reducer)
+        public void RemoveReducer<A>(Reducer<T, A> reducer)
         {
-            this._reducerList.Remove(reducer);
+            this._reducerDictionary.Remove(typeof(A));
         }
 
         public void Dispatch<A>(A action)
         {
-            foreach (var _reducer in _reducerList)
+            foreach (var reducerEntry in this._reducerDictionary)
             {
-                _state = _reducer(State, action);
-            }
+                var type = reducerEntry.Key;
+                var reducer = reducerEntry.Value;
 
-            changed = true;
+                if (type.Equals(action.GetType()))
+                {
+                    _state = reducer(State, action);
+                    _changed = true;
+                }
+            }
         }
 
         public void Update()
         {
-            if (!changed)
+            if (!_changed)
             {
                 return;
             }
 
-            changed = false;
+            _changed = false;
 
             if (RenderEvent != null)
             {

@@ -4,8 +4,8 @@
     {
         // TODO: return Subscription
         event Render<S> RenderEvent;
-        void AddReducer(Reducer<S> reducer);
-        void RemoveReducer(Reducer<S> reducer);
+        void AddReducer<A>(Reducer<S, A> reducer);
+        void RemoveReducer<A>(Reducer<S, A> reducer);
         void Dispatch<A>(A action);
         void Update();
     }
