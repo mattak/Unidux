@@ -49,13 +49,8 @@ namespace Unidux
             }
         }
 
-        public void Update()
+        public void ForceUpdate()
         {
-            if (!_changed)
-            {
-                return;
-            }
-
             _changed = false;
 
             if (RenderEvent != null)
@@ -65,6 +60,16 @@ namespace Unidux
 
             // The function may slow
             SetNullToOneTimeField(State);
+        }
+
+        public void Update()
+        {
+            if (!_changed)
+            {
+                return;
+            }
+
+            ForceUpdate();
         }
 
         // Experimental feature to flush onetime state value

@@ -8,13 +8,13 @@ namespace Unidux
         void OnEnable()
         {
             this._reduceSubscriber(true);
-            this._reduceSubscriber(true);
+            this._renderSubscriber(true);
         }
 
         void OnDisable()
         {
             this._reduceSubscriber(false);
-            this._reduceSubscriber(false);
+            this._renderSubscriber(false);
         }
     }
 }
