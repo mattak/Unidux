@@ -78,7 +78,7 @@ namespace Unidux
             var members = state.GetType().GetProperties();
             foreach (var member in members)
             {
-                var attribute = member.GetCustomAttributes(typeof(OneTimeAttribute), false);
+                var attribute = member.GetCustomAttributes(typeof(FlashAfterRenderAttribute), false);
 
                 if (attribute.Length > 0)
                 {
@@ -89,7 +89,7 @@ namespace Unidux
                     }
                     else
                     {
-                        Debug.LogWarning("OneTimeAttribute does not support primitive type.");
+                        Debug.LogWarning("FlashAfterRenderAttribute does not support primitive type.");
                     }
                 }
             }
