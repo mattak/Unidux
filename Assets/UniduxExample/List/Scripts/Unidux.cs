@@ -12,7 +12,7 @@
 
         void Update()
         {
-            this.Store.Update();
+            this.Store.ForceUpdate();
         }
     }
 }
