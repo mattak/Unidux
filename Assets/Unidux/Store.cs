@@ -60,6 +60,7 @@ namespace Unidux
 
             // The function may slow
             SetNullToOneTimeField(State);
+            ResetStateChanged(State);
         }
 
         public void Update()
@@ -91,6 +92,20 @@ namespace Unidux
                     {
                         Debug.LogWarning("FlashAfterRenderAttribute does not support primitive type.");
                     }
+                }
+            }
+        }
+
+        private void ResetStateChanged(T state)
+        {
+            var members = state.GetType().GetProperties();
+            foreach (var member in members)
+            {
+                var property = member.GetValue(state, null);
+                if (property is IStateChanged)
+                {
+                    var changedProperty = (IStateChanged)property;
+                    changedProperty.StateChanged = false;
                 }
             }
         }
