@@ -75,8 +75,39 @@ public class StoreTest
         Assert.AreEqual(2, reducer.Count);
     }
 
+    [Test]
+    public void ResetStateChangedTest()
+    {
+        var store = new Store<State>();
+        var count = 0;
+
+        store.RenderEvent += (state) =>
+        {
+            count++;
+            Assert.IsTrue(state.Changed.StateChanged);
+        };
+
+        Assert.IsFalse(store.State.Changed.StateChanged);
+        store.State.Changed.StateChanged = true;
+
+        store.ForceUpdate();
+        Assert.IsFalse(store.State.Changed.StateChanged);
+        Assert.AreEqual(1, count);
+    }
+
     class State : StateBase
     {
+        public ChangedState Changed { get; set; }
+
+        public State()
+        {
+            this.Changed = new ChangedState();
+        }
+    }
+
+    class ChangedState : StateBase
+    {
+        public int Id;
     }
 
     class Action
@@ -86,6 +117,7 @@ public class StoreTest
     class SampleRender
     {
         public int Count = 0;
+
         public void Render(State state)
         {
             Count++;
