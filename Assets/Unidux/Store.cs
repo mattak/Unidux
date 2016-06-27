@@ -6,7 +6,7 @@ namespace Unidux
 {
     public class Store<T> : IStore<T> where T : StateBase, new()
     {
-        private delegate T ReducerCaller(T state,object action);
+        private delegate T ReducerCaller(T state, object action);
 
         public event Render<T> RenderEvent;
 
