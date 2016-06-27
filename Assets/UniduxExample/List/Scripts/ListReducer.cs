@@ -5,7 +5,7 @@
         public static State Reduce(State state, ListAddAction action)
         {
             state.List.Texts.Add(action.Text);
-            state.List.SetChanged();
+            state.List.SetStateChanged();
             return state;
         }
     }

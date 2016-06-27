@@ -16,7 +16,7 @@ namespace Unidux.Example.List
 
         void Render(State state)
         {
-            if (!state.List.StateChanged)
+            if (!state.List.IsStateChanged())
             {
                 return;
             }

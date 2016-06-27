@@ -34,8 +34,14 @@ public class StoreTest
         var store = new Store<State>();
         var count1 = 0;
         var count2 = 0;
-        Unidux.Render<State> render1 = (State state) => { count1++; };
-        Unidux.Render<State> render2 = (State state) => { count2++; };
+        Unidux.Render<State> render1 = (State state) =>
+        {
+            count1++;
+        };
+        Unidux.Render<State> render2 = (State state) =>
+        {
+            count2++;
+        };
 
         store.RenderEvent += render1;
         store.RenderEvent += render2;
@@ -84,14 +90,14 @@ public class StoreTest
         store.RenderEvent += (state) =>
         {
             count++;
-            Assert.IsTrue(state.Changed.StateChanged);
+            Assert.IsTrue(state.Changed.IsStateChanged());
         };
 
-        Assert.IsFalse(store.State.Changed.StateChanged);
-        store.State.Changed.StateChanged = true;
+        Assert.IsFalse(store.State.Changed.IsStateChanged());
+        store.State.Changed.SetStateChanged();
 
         store.ForceUpdate();
-        Assert.IsFalse(store.State.Changed.StateChanged);
+        Assert.IsFalse(store.State.Changed.IsStateChanged());
         Assert.AreEqual(1, count);
     }
 
@@ -105,9 +111,8 @@ public class StoreTest
         }
     }
 
-    class ChangedState : StateBase
+    class ChangedState : StateElement
     {
-        public int Id;
     }
 
     class Action
