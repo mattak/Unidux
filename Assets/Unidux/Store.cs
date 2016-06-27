@@ -6,9 +6,10 @@ namespace Unidux
 {
     public class Store<T> : IStore<T> where T : StateBase, new()
     {
-        private delegate T ReducerCaller(T state, object action);
+        private delegate T ReducerCaller(T state,object action);
 
         public event Render<T> RenderEvent;
+
         private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
         private T _state;
         private bool _changed;
@@ -26,7 +27,7 @@ namespace Unidux
 
         public void AddReducer<A>(Reducer<T, A> reducer)
         {
-            this._reducerDictionary[typeof(A)] = (state, action) => reducer(state, (A) action);
+            this._reducerDictionary[typeof(A)] = (state, action) => reducer(state, (A)action);
         }
 
         public void RemoveReducer<A>(Reducer<T, A> reducer)
@@ -105,7 +106,7 @@ namespace Unidux
                 if (property is IStateChanged)
                 {
                     var changedProperty = (IStateChanged)property;
-                    changedProperty.StateChanged = false;
+                    changedProperty.SetStateChanged(false);
                 }
             }
         }
