@@ -4,7 +4,8 @@
     {
         public static State Reduce(State state, ListAddAction action)
         {
-            state.Texts.Add(action.Text);
+            state.List.Texts.Add(action.Text);
+            state.List.SetStateChanged();
             return state;
         }
     }

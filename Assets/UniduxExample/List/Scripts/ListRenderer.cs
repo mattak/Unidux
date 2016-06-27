@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Unidux.Example.List
@@ -15,6 +16,11 @@ namespace Unidux.Example.List
 
         void Render(State state)
         {
+            if (!state.List.IsStateChanged())
+            {
+                return;
+            }
+
             // remove all child
             foreach (Transform child in this.transform)
             {
@@ -22,7 +28,7 @@ namespace Unidux.Example.List
             }
 
             // add child
-            foreach (string text in state.Texts)
+            foreach (string text in state.List.Texts)
             {
                 var item = Instantiate(ListItem);
                 item.GetComponent<RectTransform>().SetParent(this.GetComponent<RectTransform>(), false);
