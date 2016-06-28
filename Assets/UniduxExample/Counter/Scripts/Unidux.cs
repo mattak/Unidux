@@ -4,8 +4,9 @@
     {
         public Store<State> Store { get; private set; }
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             this.Store = new Store<State>();
             this.Store.AddReducer<CountAction>(CountReducer.Reduce);
         }

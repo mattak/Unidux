@@ -24,7 +24,7 @@ namespace Unidux
             }
         }
 
-        protected void Awake()
+        protected virtual void Awake()
         {
             CheckInstance();
         }
