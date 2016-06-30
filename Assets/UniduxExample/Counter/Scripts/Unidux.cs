@@ -2,13 +2,18 @@
 {
     public class Unidux : SingletonMonoBehaviour<Unidux>
     {
-        public Store<State> Store { get; private set; }
-
-        protected override void Awake()
+        private Store<State> _store;
+        public Store<State> Store
         {
-            base.Awake();
-            this.Store = new Store<State>();
-            this.Store.AddReducer<CountAction>(CountReducer.Reduce);
+            get
+            {
+                if (null == _store)
+                {
+                    _store = new Store<State>();
+                    _store.AddReducer<CountAction>(CountReducer.Reduce);
+                }
+                return _store;
+            }
         }
 
         void Update()

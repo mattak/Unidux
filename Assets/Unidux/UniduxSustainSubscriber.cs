@@ -4,16 +4,16 @@
     {
         void Start()
         {
-            _renderSubscriber(true);
-            _reduceSubscriber(true);
+            CallReducers(true);
+            CallRenders(true);
         }
 
         void OnDestroy()
         {
-            _renderSubscriber(false);
-            _reduceSubscriber(false);
-            _renderSubscriber = null;
-            _reduceSubscriber = null;
+            CallReducers(false);
+            CallRenders(false);
+            DisposeReducers();
+            DisposeRenders();
         }
     }
 }

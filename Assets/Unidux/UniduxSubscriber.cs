@@ -1,20 +1,23 @@
-﻿using System;
-using UnityEngine;
-
-namespace Unidux
+﻿namespace Unidux
 {
     public class UniduxSubscriber : UniduxSubscriberBase
     {
         void OnEnable()
         {
-            this._reduceSubscriber(true);
-            this._renderSubscriber(true);
+            CallReducers(true);
+            CallRenders(true);
         }
 
         void OnDisable()
         {
-            this._reduceSubscriber(false);
-            this._renderSubscriber(false);
+            CallReducers(false);
+            CallRenders(false);
+        }
+
+        void OnDestroy()
+        {
+            DisposeReducers();
+            DisposeRenders();
         }
     }
 }
