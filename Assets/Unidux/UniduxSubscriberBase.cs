@@ -9,7 +9,7 @@ namespace Unidux
         private readonly Dictionary<int, Action<bool>> _renderSubscriberMap = new Dictionary<int, Action<bool>>();
         private readonly Dictionary<int, Action<bool>> _reduceSubscriberMap = new Dictionary<int, Action<bool>>();
 
-        public void AddRenderTo<S>(Store<S> store, Render<S> render) where S : StateBase, new()
+        public void AddRenderTo<S>(Store<S> store, Render<S> render) where S : StateBase<S>
         {
             Action<bool> renderSubscriber = null;
             int key = render.GetHashCode();
@@ -37,7 +37,7 @@ namespace Unidux
             _renderSubscriberMap[key] = renderSubscriber;
         }
 
-        public void AddReducerTo<S, A>(Store<S> store, Reducer<S, A> reducer) where S : StateBase, new()
+        public void AddReducerTo<S, A>(Store<S> store, Reducer<S, A> reducer) where S : StateBase<S>
         {
             Action<bool> reduceSubscriber = null;
             int key = reducer.GetHashCode();

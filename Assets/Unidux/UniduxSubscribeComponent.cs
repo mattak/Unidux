@@ -8,7 +8,7 @@ namespace Unidux
             this GameObject gameObject,
             Store<T> store,
             Render<T> render)
-            where T : StateBase, new()
+            where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddRenderTo(store, render);
         }
@@ -17,7 +17,7 @@ namespace Unidux
             this GameObject gameObject,
             Store<T> store,
             Reducer<T, A> reducer)
-            where T : StateBase, new()
+            where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddReducerTo(store, reducer);
         }
@@ -26,7 +26,7 @@ namespace Unidux
             this GameObject gameObject,
             Store<T> store,
             Render<T> render)
-            where T : StateBase, new()
+            where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddRenderTo(store, render);
         }
@@ -35,7 +35,7 @@ namespace Unidux
             this GameObject gameObject,
             Store<T> store,
             Reducer<T, A> reducer)
-            where T : StateBase, new()
+            where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddReducerTo(store, reducer);
         }

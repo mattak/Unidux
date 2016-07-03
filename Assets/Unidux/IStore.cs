@@ -1,6 +1,6 @@
 ﻿namespace Unidux
 {
-    public interface IStore<S> where S : StateBase
+    public interface IStore<S> where S : StateBase<S>
     {
         // TODO: return Subscription
         event Render<S> RenderEvent;

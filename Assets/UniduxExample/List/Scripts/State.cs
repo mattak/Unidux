@@ -2,7 +2,7 @@
 
 namespace Unidux.Example.List
 {
-    public class State : StateBase
+    public class State : StateBase<State>
     {
         public ListState List { get; set; }
 

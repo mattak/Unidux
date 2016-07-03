@@ -9,7 +9,7 @@ public class StoreTest
     [Test]
     public void RenderSubscribeTest()
     {
-        var store = new Store<State>();
+        var store = new Store<State>(new State());
         var render = new SampleRender();
         store.RenderEvent += render.Render;
 
@@ -31,7 +31,7 @@ public class StoreTest
     [Test]
     public void RenderMultipleSubscribeTest()
     {
-        var store = new Store<State>();
+        var store = new Store<State>(new State());
         var count1 = 0;
         var count2 = 0;
         Unidux.Render<State> render1 = (State state) =>
@@ -66,7 +66,7 @@ public class StoreTest
     [Test]
     public void ReducerSubscribeTest()
     {
-        var store = new Store<State>();
+        var store = new Store<State>(new State());
         var reducer = new SampleReducer();
         store.AddReducer<Action>(reducer.Reduce);
 
@@ -84,7 +84,7 @@ public class StoreTest
     [Test]
     public void ResetStateChangedTest()
     {
-        var store = new Store<State>();
+        var store = new Store<State>(new State());
         var count = 0;
 
         store.RenderEvent += (state) =>
@@ -101,7 +101,7 @@ public class StoreTest
         Assert.AreEqual(1, count);
     }
 
-    class State : StateBase
+    class State : StateBase<State>
     {
         public ChangedState Changed { get; set; }
 
@@ -111,7 +111,7 @@ public class StoreTest
         }
     }
 
-    class ChangedState : StateElement
+    class ChangedState : StateElement<ChangedState>
     {
     }
 
