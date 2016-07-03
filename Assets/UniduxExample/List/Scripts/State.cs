@@ -10,5 +10,12 @@ namespace Unidux.Example.List
         {
             this.List = new ListState();
         }
+
+        public override State Clone()
+        {
+            var state = (State)MemberwiseClone();
+            state.List = state.List.Clone();
+            return state;
+        }
     }
 }

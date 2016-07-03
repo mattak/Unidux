@@ -54,15 +54,22 @@ namespace Unidux
         public void ForceUpdate()
         {
             _changed = false;
+            T fixedState;
+
+            lock (_state)
+            {
+                // Prevent writing state object
+                fixedState = _state.Clone();
+
+                // The function may slow
+                SetNullToOneTimeField(_state);
+                ResetStateChanged(_state);
+            }
 
             if (RenderEvent != null)
             {
-                RenderEvent(State);
+                RenderEvent(fixedState);
             }
-
-            // The function may slow
-            SetNullToOneTimeField(State);
-            ResetStateChanged(State);
         }
 
         public void Update()

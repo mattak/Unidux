@@ -109,6 +109,11 @@ public class StoreTest
         {
             this.Changed = new ChangedState();
         }
+
+        public override State Clone()
+        {
+            return (State)MemberwiseClone();
+        }
     }
 
     class ChangedState : StateElement<ChangedState>
