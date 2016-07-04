@@ -1,4 +1,4 @@
 ﻿namespace Unidux
 {
-    public delegate void Render<S>(S state) where S : StateBase;
+    public delegate void Render<S>(S state) where S : StateBase<S>;
 }

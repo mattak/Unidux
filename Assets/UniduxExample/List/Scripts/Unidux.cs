@@ -10,7 +10,7 @@
             {
                 if (null == _store)
                 {
-                    _store = new Store<State>();
+                    _store = new Store<State>(new State());
                     _store.AddReducer<ListAddAction>(ListReducer.Reduce);
                 }
 

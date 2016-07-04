@@ -1,9 +1,6 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace Unidux
+﻿namespace Unidux
 {
-    public class StateElement : IState, IStateChanged
+    public class StateElement<T> : IState, IStateChanged, IStateClone<T>
     {
         private bool _stateChanged = false;
 
@@ -15,6 +12,11 @@ namespace Unidux
         public void SetStateChanged(bool changed = true)
         {
             this._stateChanged = changed;
+        }
+
+        public T Clone()
+        {
+            return (T)MemberwiseClone();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Unidux
 {
-    public class StateBase : IState
+    public abstract class StateBase<T> : IState, IStateClone<T>
     {
+        public abstract T Clone();
     }
 }

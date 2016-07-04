@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Unidux
 {
-    public class Store<T> : IStore<T> where T : StateBase, new()
+    public class Store<T> : IStore<T> where T : StateBase<T>
     {
         private delegate T ReducerCaller(T state, object action);
 
@@ -16,11 +16,12 @@ namespace Unidux
 
         public T State
         {
-            get { return _state ?? (_state = new T()); }
+            get { return _state; }
         }
 
-        public Store()
+        public Store(T state)
         {
+            this._state = state;
             this._changed = false;
             this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
         }
@@ -53,15 +54,22 @@ namespace Unidux
         public void ForceUpdate()
         {
             _changed = false;
+            T fixedState;
+
+            lock (_state)
+            {
+                // Prevent writing state object
+                fixedState = _state.Clone();
+
+                // The function may slow
+                SetNullToOneTimeField(_state);
+                ResetStateChanged(_state);
+            }
 
             if (RenderEvent != null)
             {
-                RenderEvent(State);
+                RenderEvent(fixedState);
             }
-
-            // The function may slow
-            SetNullToOneTimeField(State);
-            ResetStateChanged(State);
         }
 
         public void Update()
