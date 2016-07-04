@@ -112,7 +112,9 @@ public class StoreTest
 
         public override State Clone()
         {
-            return (State)MemberwiseClone();
+            var state = (State)MemberwiseClone();
+            state.Changed = state.Changed.Clone();
+            return state;
         }
     }
 
