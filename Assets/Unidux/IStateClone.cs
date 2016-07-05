@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-namespace Unidux
+﻿namespace Unidux
 {
     public interface IStateClone<T>
     {

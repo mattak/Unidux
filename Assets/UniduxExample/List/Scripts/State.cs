@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Unidux.Example.List
+﻿namespace Unidux.Example.List
 {
     public class State : StateBase<State>
     {
