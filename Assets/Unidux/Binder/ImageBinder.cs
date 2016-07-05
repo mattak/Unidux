@@ -10,12 +10,12 @@ namespace Unidux.Binder
 
         public static void BindTo<T>(this Image image, Store<T> store, SpriteBindDelegate<T> caller) where T : StateBase<T>
         {
-            image.gameObject.AddTo(store, state => { image.sprite = caller(state); });
+            image.gameObject.AddDisableTo(store, state => { image.sprite = caller(state); });
         }
 
         public static void BindPathTo<T>(this Image image, Store<T> store, SpritePathBindDelegate<T> caller) where T : StateBase<T>
         {
-            image.gameObject.AddTo(store, state => { image.sprite = Resources.Load<Sprite>(caller(state)); });
+            image.gameObject.AddDisableTo(store, state => { image.sprite = Resources.Load<Sprite>(caller(state)); });
         }
     }
 }

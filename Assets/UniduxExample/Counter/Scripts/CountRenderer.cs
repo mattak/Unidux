@@ -10,7 +10,7 @@ namespace Unidux.Example.Counter
         {
             var text = this.GetComponent<Text>();
             var store = Unidux.Instance.Store;
-            this.gameObject.AddTo(store, state => text.text = state.Count.ToString());
+            this.gameObject.AddDisableTo(store, state => text.text = state.Count.ToString());
         }
     }
 }

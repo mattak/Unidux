@@ -1,17 +1,21 @@
 ﻿namespace Unidux
 {
-    public class UniduxSustainSubscriber : UniduxSubscriberBase
+    public class UniduxDisableSubscriber : UniduxSubscriberBase
     {
-        void Start()
+        void OnEnable()
         {
             CallReducers(true);
             CallRenders(true);
         }
 
-        void OnDestroy()
+        void OnDisable()
         {
             CallReducers(false);
             CallRenders(false);
+        }
+
+        void OnDestroy()
+        {
             DisposeReducers();
             DisposeRenders();
         }

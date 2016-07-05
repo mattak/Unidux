@@ -11,7 +11,7 @@ namespace Unidux.Example.List
         void Start()
         {
             var store = Unidux.Instance.Store;
-            this.gameObject.AddTo(store, Render);
+            this.gameObject.AddDisableTo(store, Render);
         }
 
         void Render(State state)

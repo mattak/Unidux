@@ -9,7 +9,7 @@ namespace Unidux.Binder
         public static void BindActiveTo<T>(this GameObject gameObject, Store<T> store, BoolBindDelegate<T> caller)
             where T : StateBase<T>
         {
-            gameObject.AddSustainTo(store, state => { gameObject.SetActive(caller(state)); });
+            gameObject.AddDestroyTo(store, state => { gameObject.SetActive(caller(state)); });
         }
     }
 }

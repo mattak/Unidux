@@ -8,7 +8,7 @@ namespace Unidux.Binder
 
         public static void BindTo<T>(this Text text, Store<T> store, StringBindDelegate<T> caller) where T : StateBase<T>
         {
-            text.gameObject.AddTo<T>(store, state => { text.text = caller(state); });
+            text.gameObject.AddDisableTo<T>(store, state => { text.text = caller(state); });
         }
     }
 }
