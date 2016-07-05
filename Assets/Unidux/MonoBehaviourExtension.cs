@@ -2,42 +2,42 @@ using UnityEngine;
 
 namespace Unidux
 {
-    public static class MonoBehaviourExt
+    public static class MonoBehaviourExtension
     {
-        public static void AddTo<T>(
+        public static void AddDisableTo<T>(
+            this MonoBehaviour behaviour,
+            Store<T> store,
+            Render<T> render)
+            where T : StateBase<T>
+        {
+            GetOrAddUniduxSubscriber<UniduxDisableSubscriber>(behaviour.gameObject).AddRenderTo(store, render);
+        }
+
+        public static void AddDisableTo<T>(
             this GameObject gameObject,
             Store<T> store,
             Render<T> render)
             where T : StateBase<T>
         {
-            GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddRenderTo(store, render);
+            GetOrAddUniduxSubscriber<UniduxDisableSubscriber>(gameObject).AddRenderTo(store, render);
         }
 
-        public static void AddTo<T, A>(
-            this GameObject gameObject,
+        public static void AddDestroyTo<T>(
+            this MonoBehaviour behaviour,
             Store<T> store,
-            Reducer<T, A> reducer)
+            Render<T> render)
             where T : StateBase<T>
         {
-            GetOrAddUniduxSubscriber<UniduxSubscriber>(gameObject).AddReducerTo(store, reducer);
+            GetOrAddUniduxSubscriber<UniduxDestroySubscriber>(behaviour.gameObject).AddRenderTo(store, render);
         }
 
-        public static void AddSustainTo<T>(
+        public static void AddDestroyTo<T>(
             this GameObject gameObject,
             Store<T> store,
             Render<T> render)
             where T : StateBase<T>
         {
-            GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddRenderTo(store, render);
-        }
-
-        public static void AddSustainTo<T, A>(
-            this GameObject gameObject,
-            Store<T> store,
-            Reducer<T, A> reducer)
-            where T : StateBase<T>
-        {
-            GetOrAddUniduxSubscriber<UniduxSustainSubscriber>(gameObject).AddReducerTo(store, reducer);
+            GetOrAddUniduxSubscriber<UniduxDestroySubscriber>(gameObject).AddRenderTo(store, render);
         }
 
         private static T GetOrAddUniduxSubscriber<T>(GameObject gameObject) where T : UniduxSubscriberBase

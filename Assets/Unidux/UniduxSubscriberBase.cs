@@ -6,12 +6,12 @@ namespace Unidux
 {
     public class UniduxSubscriberBase : MonoBehaviour, IUniduxSubscriber
     {
-        private readonly Dictionary<int, Action<bool>> _renderSubscriberMap = new Dictionary<int, Action<bool>>();
-        private readonly Dictionary<int, Action<bool>> _reduceSubscriberMap = new Dictionary<int, Action<bool>>();
+        private readonly Dictionary<int, Action> _renderSubscriberMap = new Dictionary<int, Action>();
+        private readonly Dictionary<int, Action> _reduceSubscriberMap = new Dictionary<int, Action>();
 
         public void AddRenderTo<S>(Store<S> store, Render<S> render) where S : StateBase<S>
         {
-            Action<bool> renderSubscriber = null;
+            Action renderSubscriber = null;
             int key = render.GetHashCode();
 
             if (_renderSubscriberMap.ContainsKey(key))
@@ -20,26 +20,16 @@ namespace Unidux
             }
             else
             {
-                renderSubscriber = (enable) =>
-                {
-                    if (enable)
-                    {
-                        store.RenderEvent += render;
-                    }
-                    else
-                    {
-                        store.RenderEvent -= render;
-                    }
-                };
+                renderSubscriber = () => { store.RenderEvent -= render; };
             }
-            renderSubscriber(true);
+            store.RenderEvent += render;
 
             _renderSubscriberMap[key] = renderSubscriber;
         }
 
         public void AddReducerTo<S, A>(Store<S> store, Reducer<S, A> reducer) where S : StateBase<S>
         {
-            Action<bool> reduceSubscriber = null;
+            Action reduceSubscriber = null;
             int key = reducer.GetHashCode();
 
             if (_reduceSubscriberMap.ContainsKey(key))
@@ -48,36 +38,26 @@ namespace Unidux
             }
             else
             {
-                reduceSubscriber = (enable) =>
-                {
-                    if (enable)
-                    {
-                        store.AddReducer(reducer);
-                    }
-                    else
-                    {
-                        store.RemoveReducer(reducer);
-                    }
-                };
+                reduceSubscriber = () => { store.RemoveReducer(reducer); };
             }
-            reduceSubscriber(true);
+            store.AddReducer(reducer);
 
             _reduceSubscriberMap[key] = reduceSubscriber;
         }
 
-        protected void CallRenders(bool subscribe)
+        protected void UnsubscribeRenders()
         {
-            foreach (var caller in _renderSubscriberMap.Values)
+            foreach (var unsubscribe in _renderSubscriberMap.Values)
             {
-                caller(subscribe);
+                unsubscribe();
             }
         }
 
-        protected void CallReducers(bool subscribe)
+        protected void UnsubscribeReducers()
         {
-            foreach (var caller in _reduceSubscriberMap.Values)
+            foreach (var unsubscribe in _reduceSubscriberMap.Values)
             {
-                caller(subscribe);
+                unsubscribe();
             }
         }
 
