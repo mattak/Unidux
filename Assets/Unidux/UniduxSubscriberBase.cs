@@ -7,12 +7,11 @@ namespace Unidux
     public class UniduxSubscriberBase : MonoBehaviour, IUniduxSubscriber
     {
         private readonly Dictionary<int, Action> _renderSubscriberMap = new Dictionary<int, Action>();
-        private readonly Dictionary<int, Action> _reduceSubscriberMap = new Dictionary<int, Action>();
 
-        public void AddRenderTo<S>(Store<S> store, Render<S> render) where S : StateBase<S>
+        public void AddRenderTo<S>(Store<S> store, Renderer<S> renderer) where S : StateBase<S>
         {
             Action renderSubscriber = null;
-            int key = render.GetHashCode();
+            int key = renderer.GetHashCode();
 
             if (_renderSubscriberMap.ContainsKey(key))
             {
@@ -20,29 +19,11 @@ namespace Unidux
             }
             else
             {
-                renderSubscriber = () => { store.RenderEvent -= render; };
+                renderSubscriber = () => { store.RemoveRenderer(renderer); };
             }
-            store.RenderEvent += render;
+            store.AddRenderer(renderer);
 
             _renderSubscriberMap[key] = renderSubscriber;
-        }
-
-        public void AddReducerTo<S, A>(Store<S> store, Reducer<S, A> reducer) where S : StateBase<S>
-        {
-            Action reduceSubscriber = null;
-            int key = reducer.GetHashCode();
-
-            if (_reduceSubscriberMap.ContainsKey(key))
-            {
-                reduceSubscriber = _reduceSubscriberMap[key];
-            }
-            else
-            {
-                reduceSubscriber = () => { store.RemoveReducer(reducer); };
-            }
-            store.AddReducer(reducer);
-
-            _reduceSubscriberMap[key] = reduceSubscriber;
         }
 
         protected void UnsubscribeRenders()
@@ -53,22 +34,9 @@ namespace Unidux
             }
         }
 
-        protected void UnsubscribeReducers()
-        {
-            foreach (var unsubscribe in _reduceSubscriberMap.Values)
-            {
-                unsubscribe();
-            }
-        }
-
         protected void DisposeRenders()
         {
             _renderSubscriberMap.Clear();
-        }
-
-        protected void DisposeReducers()
-        {
-            _reduceSubscriberMap.Clear();
         }
     }
 }

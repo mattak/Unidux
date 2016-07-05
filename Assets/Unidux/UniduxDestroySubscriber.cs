@@ -4,9 +4,7 @@
     {
         void OnDestroy()
         {
-            UnsubscribeReducers();
             UnsubscribeRenders();
-            DisposeReducers();
             DisposeRenders();
         }
     }

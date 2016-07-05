@@ -11,7 +11,7 @@ public class StoreTest
     {
         var store = new Store<State>(new State());
         var render = new SampleRender();
-        store.RenderEvent += render.Render;
+        store.AddRenderer(render.Render);
 
         store.Dispatch(new Action());
         store.ForceUpdate();
@@ -21,7 +21,7 @@ public class StoreTest
         store.ForceUpdate();
         Assert.AreEqual(2, render.Count);
 
-        store.RenderEvent -= render.Render;
+        store.RemoveRenderer(render.Render);
 
         store.Dispatch(new Action());
         store.ForceUpdate();
@@ -34,29 +34,29 @@ public class StoreTest
         var store = new Store<State>(new State());
         var count1 = 0;
         var count2 = 0;
-        Unidux.Render<State> render1 = (State state) =>
+        Unidux.Renderer<State> render1 = (State state) =>
         {
             count1++;
         };
-        Unidux.Render<State> render2 = (State state) =>
+        Unidux.Renderer<State> render2 = (State state) =>
         {
             count2++;
         };
 
-        store.RenderEvent += render1;
-        store.RenderEvent += render2;
+        store.AddRenderer(render1);
+        store.AddRenderer(render2);
 
         store.ForceUpdate();
         Assert.AreEqual(1, count1);
         Assert.AreEqual(1, count2);
 
-        store.RenderEvent -= render1;
+        store.RemoveRenderer(render1);
 
         store.ForceUpdate();
         Assert.AreEqual(1, count1);
         Assert.AreEqual(2, count2);
 
-        store.RenderEvent -= render2;
+        store.RemoveRenderer(render2);
 
         store.ForceUpdate();
         Assert.AreEqual(1, count1);
@@ -87,11 +87,11 @@ public class StoreTest
         var store = new Store<State>(new State());
         var count = 0;
 
-        store.RenderEvent += (state) =>
+        store.AddRenderer((state) =>
         {
             count++;
             Assert.IsTrue(state.Changed.IsStateChanged());
-        };
+        });
 
         Assert.IsFalse(store.State.Changed.IsStateChanged());
         store.State.Changed.SetStateChanged();

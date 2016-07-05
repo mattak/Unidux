@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Unidux
 {
@@ -8,9 +7,8 @@ namespace Unidux
     {
         private delegate T ReducerCaller(T state, object action);
 
-        public event Render<T> RenderEvent;
-
         private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
+        private readonly Dictionary<int, Renderer<T>> _rendererDictionary;
         private T _state;
         private bool _changed;
 
@@ -24,6 +22,7 @@ namespace Unidux
             this._state = state;
             this._changed = false;
             this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
+            this._rendererDictionary = new Dictionary<int, Renderer<T>>();
         }
 
         public void AddReducer<A>(Reducer<T, A> reducer)
@@ -34,6 +33,22 @@ namespace Unidux
         public void RemoveReducer<A>(Reducer<T, A> reducer)
         {
             this._reducerDictionary.Remove(typeof(A));
+        }
+
+        public void AddRenderer(Renderer<T> renderer)
+        {
+            int key = renderer.GetHashCode();
+            this._rendererDictionary[key] = renderer;
+        }
+
+        public void RemoveRenderer(Renderer<T> renderer)
+        {
+            int key = renderer.GetHashCode();
+
+            if (this._rendererDictionary.ContainsKey(key))
+            {
+                this._rendererDictionary.Remove(key);
+            }
         }
 
         public void Dispatch<A>(A action)
@@ -66,9 +81,12 @@ namespace Unidux
                 ResetStateChanged(_state);
             }
 
-            if (RenderEvent != null)
+            foreach (var key in this._rendererDictionary.Keys)
             {
-                RenderEvent(fixedState);
+                if (this._rendererDictionary.ContainsKey(key))
+                {
+                    this._rendererDictionary[key](fixedState);
+                }
             }
         }
 
@@ -99,7 +117,7 @@ namespace Unidux
                     }
                     else
                     {
-                        Debug.LogWarning("FlashAfterRenderAttribute does not support primitive type.");
+                        UnityEngine.Debug.LogWarning("FlashAfterRenderAttribute does not support primitive type.");
                     }
                 }
             }
