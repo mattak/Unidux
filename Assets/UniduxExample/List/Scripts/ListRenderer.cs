@@ -7,10 +7,11 @@ namespace Unidux.Example.List
     {
         public GameObject ListItem;
 
-        void Start()
+        void OnEnable()
         {
             var store = Unidux.Instance.Store;
-            this.gameObject.AddDisableTo(store, Render);
+            this.AddDisableTo(store, Render);
+            Render(store.State);
         }
 
         void Render(State state)
