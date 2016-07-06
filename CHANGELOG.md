@@ -1,3 +1,18 @@
+# 2016-07-06 v0.2.0
+
+Breaking Changes
+- Remove subscribe trigger https://github.com/mattak/Unidux/issues/39
+- Consistent State Rendering https://github.com/mattak/Unidux/issues/35
+- Be virtual SingletonMonoBehaviour https://github.com/mattak/Unidux/issues/31
+- AddTo, AddSustainTo => AddDisableTo, AddDestroyTo https://github.com/mattak/Unidux/issues/30
+- move shortcut GameObject to MonoBehaviour https://github.com/mattak/Unidux/issues/29
+
+Bug Fixes
+- Multiple AddTo not works well https://github.com/mattak/Unidux/issues/33
+
+Etc
+- Update List, Count Examples to fit new Unidux.
+
 # 2016-06-30 v0.1.1
 
 Bug Fixes
