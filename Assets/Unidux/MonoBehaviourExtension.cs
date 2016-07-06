@@ -7,7 +7,7 @@ namespace Unidux
         public static void AddDisableTo<T>(
             this MonoBehaviour behaviour,
             Store<T> store,
-            Render<T> render)
+            Renderer<T> render)
             where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxDisableSubscriber>(behaviour.gameObject).AddRenderTo(store, render);
@@ -16,7 +16,7 @@ namespace Unidux
         public static void AddDisableTo<T>(
             this GameObject gameObject,
             Store<T> store,
-            Render<T> render)
+            Renderer<T> render)
             where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxDisableSubscriber>(gameObject).AddRenderTo(store, render);
@@ -25,7 +25,7 @@ namespace Unidux
         public static void AddDestroyTo<T>(
             this MonoBehaviour behaviour,
             Store<T> store,
-            Render<T> render)
+            Renderer<T> render)
             where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxDestroySubscriber>(behaviour.gameObject).AddRenderTo(store, render);
@@ -34,7 +34,7 @@ namespace Unidux
         public static void AddDestroyTo<T>(
             this GameObject gameObject,
             Store<T> store,
-            Render<T> render)
+            Renderer<T> render)
             where T : StateBase<T>
         {
             GetOrAddUniduxSubscriber<UniduxDestroySubscriber>(gameObject).AddRenderTo(store, render);

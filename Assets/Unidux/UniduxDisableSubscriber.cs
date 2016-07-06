@@ -4,9 +4,7 @@
     {
         void OnDisable()
         {
-            UnsubscribeReducers();
             UnsubscribeRenders();
-            DisposeReducers();
             DisposeRenders();
         }
     }
