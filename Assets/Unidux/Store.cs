@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Unidux
@@ -81,7 +82,8 @@ namespace Unidux
                 ResetStateChanged(_state);
             }
 
-            foreach (var key in this._rendererDictionary.Keys)
+            // NOTE: ToList is important to prevent 'InvalidOperationException: out of sync'
+            foreach (var key in this._rendererDictionary.Keys.ToList())
             {
                 if (this._rendererDictionary.ContainsKey(key))
                 {
