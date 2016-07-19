@@ -1,4 +1,4 @@
-# Unidux 
+# <a href="https://github.com/mattak/Unidux"><img src="/mattak/Unidux/raw/master/art/unidux-logo-horizontal.png" height="60"></a>
 
 Redux inspired architecture for Unity.
 
