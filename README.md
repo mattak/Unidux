@@ -5,7 +5,7 @@ It's redux inspired by Redux.
 
 # Install
 
-Import unitypackage form [latest releases](https://github.com/mattak/Unidux/releases).
+Import unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
 
 # Usage
 
