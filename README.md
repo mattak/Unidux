@@ -1,7 +1,8 @@
 # <a href="https://github.com/mattak/Unidux"><img src="https://raw.githubusercontent.com/mattak/Unidux/master/art/unidux-logo-horizontal.png" height="60"></a>
 
 Unidux is practical application architecture for Unity3D UI.
-It's redux inspired by Redux.
+
+It's inspired by Redux.
 
 # Install
 
@@ -9,7 +10,7 @@ Import unitypackage from [latest releases](https://github.com/mattak/Unidux/rele
 
 # Usage
 
-1. Create your Unidux singleton and place it to unity scene.
+1) Create your Unidux singleton and place it to unity scene.
 
 ```
 using Unidux;
@@ -37,7 +38,7 @@ public class Unidux : SingletonMonoBehaviour<Unidux>
 }
 ```
 
-2. Create state class to store application state.
+2) Create state class to store application state.
 
 ```
 using Unidux;
@@ -47,7 +48,7 @@ public class State : StateBase<State>
 }
 ```
 
-3. Define action to change state.
+3) Define action to change state.
 
 ```
 public enum CountAction
@@ -57,7 +58,7 @@ public enum CountAction
 }
 ```
 
-4. Create reducer to update state
+4) Create reducer to update state
 
 ```
 using Unidux;
@@ -81,7 +82,7 @@ public static class CountReducer
 }
 ```
 
-5. Create Renderer to display state and attach it to Text GameObject.
+5) Create Renderer to display state and attach it to Text GameObject.
 
 ```
 using UnityEngine;
@@ -99,7 +100,7 @@ public class CountRenderer : MonoBehaviour
 }
 ```
 
-6. Create dispatcher to update count and attach it to GameObject.
+6) Create dispatcher to update count and attach it to GameObject.
 
 ```
 [RequireComponent(typeof(Button))]
