@@ -1,8 +1,16 @@
 ﻿namespace Unidux.Example.Counter
 {
+    // Action
+    public enum CountAction
+    {
+        Increment,
+        Decrement
+    }
+
     public static class CountReducer
     {
-        public static State Reduce(State state, CountAction action)
+        // Reducer
+        public static State Reducer(State state, CountAction action)
         {
             switch (action)
             {
@@ -15,6 +23,12 @@
             }
 
             return state;
+        }
+
+        // ActionCreator
+        public static CountAction Increment()
+        {
+            return CountAction.Increment;
         }
     }
 }

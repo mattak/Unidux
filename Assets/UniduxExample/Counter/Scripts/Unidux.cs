@@ -10,7 +10,7 @@
                 if (null == _store)
                 {
                     _store = new Store<State>(new State());
-                    _store.AddReducer<CountAction>(CountReducer.Reduce);
+                    _store.AddReducer<CountAction>(CountReducer.Reducer);
                 }
                 return _store;
             }
