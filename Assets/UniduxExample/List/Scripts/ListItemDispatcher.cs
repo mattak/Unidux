@@ -16,7 +16,7 @@ namespace Unidux.Example.List
 
         void OnClick()
         {
-            Unidux.Instance.Store.Dispatch(new ListAddAction(ItemName));
+            Unidux.Instance.Store.Dispatch(ListReducer.AddList(ItemName));
         }
     }
 }
