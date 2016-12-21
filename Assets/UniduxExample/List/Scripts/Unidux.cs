@@ -11,7 +11,7 @@
                 if (null == _store)
                 {
                     _store = new Store<State>(new State());
-                    _store.AddReducer<ListAddAction>(ListReducer.Reduce);
+                    _store.AddReducer<List.Action>(List.Reducer);
                 }
 
                 return _store;

@@ -6,7 +6,7 @@ namespace Unidux.Example.Counter
     [RequireComponent(typeof(Button))]
     public class CountDispatcher : MonoBehaviour
     {
-        public CountAction ActionType = CountAction.Increment;
+        public Count.ActionType ActionType = Count.ActionType.Increment;
 
         void Start()
         {
