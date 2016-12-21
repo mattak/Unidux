@@ -1,23 +1,29 @@
 ﻿namespace Unidux.Example.Counter
 {
-    // Action
-    public enum CountAction
+    public static class Count
     {
-        Increment,
-        Decrement
-    }
+        // specify the possible types of actions
+        public enum ActionType
+        {
+            Increment,
+            Decrement
+        }
 
-    public static class CountReducer
-    {
-        // Reducer
-        public static State Reducer(State state, CountAction action)
+        // actions must have a type and may include a payload
+        public class Action
+        {
+            public ActionType ActionType;
+        }
+
+        // reducers handle state changes
+        public static State Reducer(State state, ActionType action)
         {
             switch (action)
             {
-                case CountAction.Increment:
+                case ActionType.Increment:
                     state.Count++;
                     break;
-                case CountAction.Decrement:
+                case ActionType.Decrement:
                     state.Count--;
                     break;
             }
@@ -25,10 +31,19 @@
             return state;
         }
 
-        // ActionCreator
-        public static CountAction Increment()
+        // ActionCreators creates actions and deliver payloads
+        // in redux, you do not dispatch from the ActionCreator to allow for easy testability
+        public static class ActionCreator
         {
-            return CountAction.Increment;
+            public static Action Increment()
+            {
+                return new Action() {ActionType = ActionType.Increment};
+            }
+
+            public static Action Decrement()
+            {
+                return new Action() {ActionType = ActionType.Decrement};
+            }
         }
     }
 }
