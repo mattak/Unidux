@@ -1,25 +1,37 @@
 ﻿namespace Unidux.Example.List
 {
-    // Action
-    public class ListAddAction
+    public static class List
     {
-        public string Text;
-    }
-
-    public static class ListReducer
-    {
-        // Reducer
-        public static State Reducer(State state, ListAddAction action)
+        public enum ActionType
         {
-            state.List.Texts.Add(action.Text);
-            state.List.SetStateChanged();
+            Add
+        }
+
+        public class Action
+        {
+            public ActionType ActionType;
+            public string Text;
+        }
+
+        public static State Reducer(State state, Action action)
+        {
+            switch (action.ActionType)
+            {
+                case ActionType.Add:
+                    state.List.Texts.Add(action.Text);
+                    state.List.SetStateChanged();
+                    break;
+            }
+
             return state;
         }
 
-        // ActionCreator
-        public static ListAddAction AddList(string text)
+        public static class ActionCreator
         {
-            return new ListAddAction() {Text = text};
+            public static Action Add(string text)
+            {
+                return new Action() {ActionType = ActionType.Add, Text = text};
+            }
         }
     }
 }
