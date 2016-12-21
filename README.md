@@ -1,5 +1,7 @@
 # <a href="https://github.com/mattak/Unidux"><img src="https://raw.githubusercontent.com/mattak/Unidux/master/art/unidux-logo-horizontal.png" height="60"></a>
 
+[![Join the chat at https://gitter.im/Unidux/Lobby](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Unidux/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Unidux is practical application architecture for Unity3D UI.
 
 It's inspired by Redux.
