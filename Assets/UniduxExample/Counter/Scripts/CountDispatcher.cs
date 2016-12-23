@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Unidux.Example.Counter
@@ -10,8 +11,11 @@ namespace Unidux.Example.Counter
 
         void Start()
         {
-            var button = this.GetComponent<Button>();
-            button.onClick.AddListener(() => Unidux.Instance.Store.Dispatch(ActionType));
+            this.GetComponent<Button>()
+                .OnClickAsObservable()
+                .Subscribe(state => Unidux.Store.Dispatch(ActionType))
+                .AddTo(this)
+                ;
         }
     }
 }

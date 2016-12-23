@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Unidux.Example.Counter
@@ -9,8 +10,11 @@ namespace Unidux.Example.Counter
         void OnEnable()
         {
             var text = this.GetComponent<Text>();
-            var store = Unidux.Instance.Store;
-            this.AddDisableTo(store, state => text.text = state.Count.ToString());
+            Unidux.Subject
+                .StartWith(Unidux.State)
+                .Subscribe(state => text.text = state.Count.ToString())
+                .AddTo(this)
+                ;
         }
     }
 }
