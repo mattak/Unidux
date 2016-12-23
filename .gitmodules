@@ -1,0 +1,3 @@
+[submodule "submodule/UniRx"]
+	path = submodule/UniRx
+	url = git@github.com:neuecc/UniRx.git
