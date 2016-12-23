@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Unidux.Example.List
@@ -9,18 +10,17 @@ namespace Unidux.Example.List
 
         void OnEnable()
         {
-            var store = Unidux.Instance.Store;
-            this.AddDisableTo(store, Render);
-            Render(store.State);
+            Unidux.Subject
+                .TakeUntilDisable(this)
+                .Where(state => state.List.IsStateChanged())
+                .StartWith(Unidux.State)
+                .Subscribe(state => this.Render(state))
+                .AddTo(this)
+                ;
         }
 
         void Render(State state)
         {
-            if (!state.List.IsStateChanged())
-            {
-                return;
-            }
-
             // remove all child
             foreach (Transform child in this.transform)
             {

@@ -15,27 +15,49 @@ Import unitypackage from [latest releases](https://github.com/mattak/Unidux/rele
 1) Create your Unidux singleton and place it to unity scene.
 
 ```cs
-using Unidux;
-public class Unidux : SingletonMonoBehaviour<Unidux>
+public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
 {
+    partial void AddReducers(Store<State> store);
+
+    private ReplaySubject<State> _subject;
     private Store<State> _store;
-    public Store<State> Store
+    private State _state;
+
+    public static State State
+    {
+        get { return Instance._state = Instance._state ?? new State(); }
+    }
+
+    public static ReplaySubject<State> Subject
+    {
+        get { return Instance._subject = Instance._subject ?? new ReplaySubject<State>(); }
+    }
+
+    public static Store<State> Store
     {
         get
         {
-            if (null == _store)
+            if (Instance._store == null)
             {
-                _store = new Store<State>(new State());
-                // Add reducers in this place.
-                _store.AddReducer<CountAction>(CountReducer.Reduce);
+                Instance._store = new Store<State>(State);
+                Instance._store.AddRenderer(state => Subject.OnNext(state));
+                Instance.AddReducers(Instance._store);
             }
-            return _store;
+            return Instance._store;
         }
     }
 
     void Update()
     {
-        this.Store.Update();
+        Store.Update();
+    }
+}
+
+public sealed partial class Unidux
+{
+    partial void AddReducers(Store<State> store)
+    {
+        store.AddReducer<Count.ActionType>(Count.Reducer);
     }
 }
 ```
@@ -50,70 +72,87 @@ public class State : StateBase<State>
 }
 ```
 
-3) Define action to change state.
+3) Define action to change state. Define Reducer to move state.
 
 ```cs
-public enum CountAction
+public static class Count
 {
-    Increment,
-    Decrement
-}
-```
+    public enum ActionType
+    {
+        Increment,
+        Decrement
+    }
 
-4) Create reducer to update state
+    public class Action
+    {
+        public ActionType ActionType;
+    }
 
-```cs
-using Unidux;
-
-public static class CountReducer
-{
-    public static State Reduce(State state, CountAction action)
+    public static State Reducer(State state, ActionType action)
     {
         switch (action)
         {
-            case CountAction.Increment:
+            case ActionType.Increment:
                 state.Count++;
                 break;
-            case CountAction.Decrement:
+            case ActionType.Decrement:
                 state.Count--;
                 break;
         }
 
         return state;
     }
+
+    public static class ActionCreator
+    {
+        public static Action Increment()
+        {
+            return new Action() {ActionType = ActionType.Increment};
+        }
+
+        public static Action Decrement()
+        {
+            return new Action() {ActionType = ActionType.Decrement};
+        }
+    }
 }
 ```
 
-5) Create Renderer to display state and attach it to Text GameObject.
+4) Create Renderer to display state and attach it to Text GameObject.
 
 ```cs
-using UnityEngine;
-using UnityEngine.UI;
-
 [RequireComponent(typeof(Text))]
 public class CountRenderer : MonoBehaviour
 {
     void OnEnable()
     {
         var text = this.GetComponent<Text>();
-        var store = Unidux.Instance.Store;
-        this.AddDisableTo(store, state => text.text = state.Count.ToString());
+
+        Unidux.Subject
+            .TakeUntilDisable(this)
+            .StartWith(Unidux.State)
+            .Subscribe(state => text.text = state.Count.ToString())
+            .AddTo(this)
+            ;
     }
 }
 ```
 
-6) Create dispatcher to update count and attach it to GameObject.
+5) Create dispatcher to update count and attach it to GameObject.
 
 ```cs
 [RequireComponent(typeof(Button))]
 public class CountDispatcher : MonoBehaviour
 {
-    public CountAction ActionType = CountAction.Increment;
+    public Count.ActionType ActionType = Count.ActionType.Increment;
 
     void Start()
     {
-        var button = this.GetComponent<Button>();
-        button.onClick.AddListener(() => Unidux.Instance.Store.Dispatch(ActionType));
+        this.GetComponent<Button>()
+            .OnClickAsObservable()
+            .Subscribe(state => Unidux.Store.Dispatch(ActionType))
+            .AddTo(this)
+            ;
     }
 }
 ```
@@ -125,6 +164,11 @@ That's it!
 
 - [Counter](Assets/UniduxExample/Counter)
 - [List](Assets/UniduxExample/List)
+
+# Thanks
+
+- [@austinmao](https://github.com/austinmao) for suggestion of Ducks and UniRx.
+- [@pine](https://github.com/pine) for description improvement.
 
 # License
 
