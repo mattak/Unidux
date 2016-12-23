@@ -1,3 +1,12 @@
+# 2016-12-24 v0.2.1
+
+Breaking Changes
+- All scripts was moved into Plugins folder https://github.com/mattak/Unidux/issues/44
+
+Etc
+- Apply [ducks proposal](https://github.com/erikras/ducks-modular-redux) to Example/{Counter,List} https://github.com/mattak/Unidux/issues/49 https://github.com/mattak/Unidux/issues/51
+- Refer [UniRx](https://github.com/neuecc/UniRx) and improve Example/{Counter,List} https://github.com/mattak/Unidux/issues/52
+
 # 2016-07-06 v0.2.0
 
 Breaking Changes
