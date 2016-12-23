@@ -165,6 +165,10 @@ That's it!
 - [Counter](Assets/UniduxExample/Counter)
 - [List](Assets/UniduxExample/List)
 
+# Dependencies
+
+- [UniRx](https://github.com/neuecc/UniRx) is refered on Example
+
 # Thanks
 
 - [@austinmao](https://github.com/austinmao) for suggestion of Ducks and UniRx.
