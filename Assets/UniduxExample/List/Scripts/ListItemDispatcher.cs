@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UniRx;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Unidux.Example.List
@@ -10,13 +11,10 @@ namespace Unidux.Example.List
 
         void Start()
         {
-            var button = this.GetComponent<Button>();
-            button.onClick.AddListener(OnClick);
-        }
-
-        void OnClick()
-        {
-            Unidux.Instance.Store.Dispatch(List.ActionCreator.Add(this.ItemName));
+            this.GetComponent<Button>()
+                .OnClickAsObservable()
+                .Subscribe(_ => Unidux.Dispatch(List.ActionCreator.Add(this.ItemName)))
+                .AddTo(this);
         }
     }
 }
