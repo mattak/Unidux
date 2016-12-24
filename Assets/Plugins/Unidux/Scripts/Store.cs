@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Unidux
 {
@@ -61,9 +62,14 @@ namespace Unidux
 
                 if (type.Equals(action.GetType()))
                 {
-                    _state = reducer(State, action);
-                    _changed = true;
+                    this._state = reducer(this.State, action);
+                    this._changed = true;
                 }
+            }
+
+            if (!this._changed)
+            {
+                Debug.LogWarning("'Store.Dispatch(" + action + ")' was failed. Maybe you forget to assign reducer.");
             }
         }
 
