@@ -4,7 +4,7 @@
     {
         partial void AddReducers(Store<State> store)
         {
-            store.AddReducer<Count.ActionType>(Count.Reducer);
+            store.AddReducer<Count.Action>(Count.Reducer);
         }
     }
 }
