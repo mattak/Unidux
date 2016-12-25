@@ -162,9 +162,9 @@ That's it!
 
 # Example
 
-- [Counter](Assets/UniduxExample/Counter)
-- [List](Assets/UniduxExample/List)
-- [Todo](Assets/UniduxExample/Todo)
+- [Counter](Assets/Plugins/Unidux/Examples/Counter)
+- [List](Assets/Plugins/Unidux/Examples/List)
+- [Todo](Assets/Plugins/Unidux/Examples/Todo)
 
 # Dependencies
 
