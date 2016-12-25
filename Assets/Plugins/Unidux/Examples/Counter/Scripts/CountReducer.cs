@@ -16,9 +16,9 @@
         }
 
         // reducers handle state changes
-        public static State Reducer(State state, ActionType action)
+        public static State Reducer(State state, Action action)
         {
-            switch (action)
+            switch (action.ActionType)
             {
                 case ActionType.Increment:
                     state.Count++;
