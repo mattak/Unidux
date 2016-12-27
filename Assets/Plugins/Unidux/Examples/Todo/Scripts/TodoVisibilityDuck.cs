@@ -13,6 +13,18 @@ namespace Unidux.Example.Todo
             public VisibilityFilter Filter;
         }
 
+        public static class ActionCreator
+        {
+            public static Action SetVisibility(VisibilityFilter filter)
+            {
+                return new Action()
+                {
+                    ActionType = ActionType.SET_VISIBILITY,
+                    Filter = filter,
+                };
+            }
+        }
+
         public static State Reducer(State state, Action action)
         {
             switch (action.ActionType)
@@ -27,7 +39,6 @@ namespace Unidux.Example.Todo
 
         public static TodoState SetVisibility(TodoState state, VisibilityFilter filter)
         {
-            // TODO: be immutable
             state.Filter = filter;
             state.SetStateChanged();
             return state;
