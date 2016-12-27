@@ -16,6 +16,27 @@ namespace Unidux.Example.Todo
             public Todo Todo;
         }
 
+        public static class ActionCreator
+        {
+            public static Action CreateTodo(string text)
+            {
+                return new Action()
+                {
+                    ActionType = ActionType.ADD_TODO,
+                    Todo = new Todo(text: text)
+                };
+            }
+
+            public static Action ToggleTodo(Todo todo, bool completed)
+            {
+                return new Action()
+                {
+                    ActionType = ActionType.TOGGLE_TODO,
+                    Todo = new Todo(id: todo.Id, text: todo.Text, completed: completed),
+                };
+            }
+        }
+
         public static State Reducer(State state, Action action)
         {
             switch (action.ActionType)
@@ -33,13 +54,10 @@ namespace Unidux.Example.Todo
 
         public static TodoState AddTodo(TodoState state, string text)
         {
-            // TODO: be immutable
-            state.List.Add(new Todo()
-            {
-                Id = state.Index,
-                Text = text,
-                Completed = false,
-            });
+            state.List.Add(new Todo(
+                id: state.Index,
+                text: text
+            ));
             state.Index = state.Index + 1;
             state.SetStateChanged();
             return state;
@@ -48,12 +66,11 @@ namespace Unidux.Example.Todo
         public static TodoState ToggleTodo(TodoState state, Todo newTodo)
         {
             var list = state.List.Select(_todo => (_todo.Id == newTodo.Id)
-                    ? new Todo()
-                    {
-                        Id = _todo.Id,
-                        Text = _todo.Text,
-                        Completed = newTodo.Completed
-                    }
+                    ? new Todo(
+                        id: _todo.Id,
+                        text: _todo.Text,
+                        completed: newTodo.Completed
+                    )
                     : _todo
                 )
                 .ToList();
