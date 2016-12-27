@@ -18,12 +18,7 @@ namespace Unidux.Example.Todo
 
         void Dispatch(string text)
         {
-            Unidux.Store.Dispatch(new TodoDuck.Action()
-            {
-                ActionType = TodoDuck.ActionType.ADD_TODO,
-                Todo = new Todo() {Text = text}
-            });
-
+            Unidux.Store.Dispatch(TodoDuck.ActionCreator.CreateTodo(text));
             this.InputField.text = "";
         }
     }

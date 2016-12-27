@@ -14,12 +14,13 @@ namespace Unidux.Example.Todo
             this.GetComponent<Button>()
                 .OnClickAsObservable()
                 .TakeUntilDisable(this)
-                .Subscribe(_ => Unidux.Store.Dispatch(new TodoVisibilityDuck.Action()
-                {
-                    ActionType = TodoVisibilityDuck.ActionType.SET_VISIBILITY,
-                    Filter = Filter
-                }))
+                .Subscribe(_ => this.Dispatch())
                 .AddTo(this);
+        }
+
+        void Dispatch()
+        {
+            Unidux.Store.Dispatch(TodoVisibilityDuck.ActionCreator.SetVisibility(Filter));
         }
     }
 }

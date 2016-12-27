@@ -22,17 +22,7 @@ namespace Unidux.Example.Todo
 
         void Dispatch(bool value)
         {
-            Unidux.Store.Dispatch(new TodoDuck.Action()
-            {
-                ActionType = TodoDuck.ActionType.TOGGLE_TODO,
-                Todo =
-                    new Todo()
-                    {
-                        Id = Todo.Id,
-                        Text = Todo.Text,
-                        Completed = value
-                    },
-            });
+            Unidux.Store.Dispatch(TodoDuck.ActionCreator.ToggleTodo(this.Todo, value));
         }
     }
 }
