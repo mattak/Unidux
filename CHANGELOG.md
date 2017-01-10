@@ -1,3 +1,9 @@
+# 2017-01-10 v0.2.2
+
+Features
+- Show warning if missing reducer https://github.com/mattak/Unidux/issues/58
+- Create TodoListExample https://github.com/mattak/Unidux/issues/14
+
 # 2016-12-24 v0.2.1
 
 Breaking Changes
