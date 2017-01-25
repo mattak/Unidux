@@ -1,6 +1,9 @@
-﻿namespace Unidux
+﻿using System;
+
+namespace Unidux
 {
-    public class StateElement<T> : IState, IStateChanged, IStateClone<T>
+    [Serializable]
+    public class StateElement<T> : IState, IStateChanged
     {
         private bool _stateChanged = false;
 
@@ -12,11 +15,6 @@
         public void SetStateChanged(bool changed = true)
         {
             this._stateChanged = changed;
-        }
-
-        public T Clone()
-        {
-            return (T)MemberwiseClone();
         }
     }
 }
