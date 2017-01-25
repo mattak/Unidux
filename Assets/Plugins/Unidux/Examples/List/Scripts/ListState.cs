@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Unidux.Example.List
 {
+    [Serializable]
     public class ListState : StateElement<ListState>
     {
         public List<string> Texts = new List<string>();

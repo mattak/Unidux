@@ -1,5 +1,8 @@
-﻿namespace Unidux.Example.Todo
+﻿using System;
+
+namespace Unidux.Example.Todo
 {
+    [Serializable]
     public class Todo
     {
         public uint Id;

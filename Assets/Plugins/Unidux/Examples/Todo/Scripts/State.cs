@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Unidux.Example.Todo
 {
+    [Serializable]
     public class State : StateBase<State>
     {
         public TodoState Todo { get; set; }
@@ -11,15 +13,9 @@ namespace Unidux.Example.Todo
         {
             this.Todo = new TodoState();
         }
-
-        public override State Clone()
-        {
-            State state = new State();
-            state.Todo = this.Todo.Clone();
-            return state;
-        }
     }
 
+    [Serializable]
     public class TodoState : StateElement<TodoState>
     {
         public uint Index = 0;
