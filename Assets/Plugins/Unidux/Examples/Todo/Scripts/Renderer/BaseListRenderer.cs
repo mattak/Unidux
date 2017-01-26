@@ -46,8 +46,6 @@ namespace Unidux.Example.Todo
 
         public void Render(Transform parentTransform, TRenderer prefab, IEnumerable<TRenderValue> values)
         {
-            this.DisableObjects();
-
             foreach (var item in values.Select((value, index) => new {value, index}))
             {
                 if (item.index >= objectPool.Count)
@@ -57,6 +55,8 @@ namespace Unidux.Example.Todo
 
                 this.RenderCell(item.index, objectPool[item.index], item.value);
             }
+
+            this.DisableUnusedObjects(values.Count());
         }
 
         protected virtual void RenderCell(int index, TRenderer renderer, TRenderValue value)
@@ -65,11 +65,16 @@ namespace Unidux.Example.Todo
             renderer.gameObject.SetActive(true);
         }
 
-        public void DisableObjects()
+        public void DisableUnusedObjects(int usedObjects)
         {
-            foreach (var renderer in objectPool)
+            for (int i = usedObjects; i < this.objectPool.Count; i++)
             {
-                renderer.gameObject.SetActive(false);
+                var renderer = this.objectPool[i];
+
+                if (renderer.gameObject.activeSelf)
+                {
+                    renderer.gameObject.SetActive(false);
+                }
             }
         }
     }

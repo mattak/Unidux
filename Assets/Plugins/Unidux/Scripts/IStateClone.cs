@@ -1,7 +1,7 @@
 ﻿namespace Unidux
 {
-    public interface IStateClone<T>
+    public interface IStateClone<TValue>
     {
-        T Clone();
+        TValue Clone();
     }
 }

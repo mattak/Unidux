@@ -13,7 +13,9 @@ namespace Unidux.Example.Counter
         {
             this.GetComponent<Button>()
                 .OnClickAsObservable()
-                .Subscribe(state => Unidux.Store.Dispatch(ActionType))
+                .Subscribe(_ =>
+                    Unidux.Store.Dispatch(Count.ActionCreator.Create(ActionType))
+                )
                 .AddTo(this)
                 ;
         }

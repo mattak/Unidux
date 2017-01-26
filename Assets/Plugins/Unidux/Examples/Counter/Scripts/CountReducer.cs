@@ -35,6 +35,11 @@
         // in redux, you do not dispatch from the ActionCreator to allow for easy testability
         public static class ActionCreator
         {
+            public static Action Create(ActionType type)
+            {
+                return new Action() {ActionType = type};
+            }
+
             public static Action Increment()
             {
                 return new Action() {ActionType = ActionType.Increment};

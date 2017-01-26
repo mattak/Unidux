@@ -1,13 +1,10 @@
-﻿namespace Unidux.Example.Counter
+﻿using System;
+
+namespace Unidux.Example.Counter
 {
+    [Serializable]
     public class State : StateBase<State>
     {
         public int Count { get; set; }
-
-        public override State Clone()
-        {
-            var state = (State)MemberwiseClone();
-            return state;
-        }
     }
 }

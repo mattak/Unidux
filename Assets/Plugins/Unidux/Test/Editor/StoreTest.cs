@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace Unidux
 {
@@ -93,6 +94,7 @@ namespace Unidux
             Assert.AreEqual(1, count);
         }
 
+        [Serializable]
         class State : StateBase<State>
         {
             public ChangedState Changed { get; set; }
@@ -101,15 +103,9 @@ namespace Unidux
             {
                 this.Changed = new ChangedState();
             }
-
-            public override State Clone()
-            {
-                var state = (State) MemberwiseClone();
-                state.Changed = state.Changed.Clone();
-                return state;
-            }
         }
 
+        [Serializable]
         class ChangedState : StateElement<ChangedState>
         {
         }
