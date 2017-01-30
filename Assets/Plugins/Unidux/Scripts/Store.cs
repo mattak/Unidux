@@ -5,45 +5,45 @@ using UnityEngine;
 
 namespace Unidux
 {
-    public class Store<T> : IStore<T> where T : StateBase<T>
+    public class Store<TState> : IStore<TState> where TState : StateBase<TState>
     {
-        private delegate T ReducerCaller(T state, object action);
+        private delegate TState ReducerCaller(TState state, object action);
 
         private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
-        private readonly Dictionary<int, Renderer<T>> _rendererDictionary;
-        private T _state;
+        private readonly Dictionary<int, Renderer<TState>> _rendererDictionary;
+        private TState _state;
         private bool _changed;
 
-        public T State
+        public TState State
         {
             get { return _state; }
         }
 
-        public Store(T state)
+        public Store(TState state)
         {
             this._state = state;
             this._changed = false;
             this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
-            this._rendererDictionary = new Dictionary<int, Renderer<T>>();
+            this._rendererDictionary = new Dictionary<int, Renderer<TState>>();
         }
 
-        public void AddReducer<A>(Reducer<T, A> reducer)
+        public void AddReducer<TAction>(Reducer<TState, TAction> reducer)
         {
-            this._reducerDictionary[typeof(A)] = (state, action) => reducer(state, (A)action);
+            this._reducerDictionary[typeof(TAction)] = (state, action) => reducer(state, (TAction)action);
         }
 
-        public void RemoveReducer<A>(Reducer<T, A> reducer)
+        public void RemoveReducer<TAction>(Reducer<TState, TAction> reducer)
         {
-            this._reducerDictionary.Remove(typeof(A));
+            this._reducerDictionary.Remove(typeof(TAction));
         }
 
-        public void AddRenderer(Renderer<T> renderer)
+        public void AddRenderer(Renderer<TState> renderer)
         {
             int key = renderer.GetHashCode();
             this._rendererDictionary[key] = renderer;
         }
 
-        public void RemoveRenderer(Renderer<T> renderer)
+        public void RemoveRenderer(Renderer<TState> renderer)
         {
             int key = renderer.GetHashCode();
 
@@ -53,7 +53,7 @@ namespace Unidux
             }
         }
 
-        public void Dispatch<A>(A action)
+        public void Dispatch<TAction>(TAction action)
         {
             foreach (var reducerEntry in this._reducerDictionary)
             {
@@ -76,7 +76,7 @@ namespace Unidux
         public void ForceUpdate()
         {
             _changed = false;
-            T fixedState;
+            TState fixedState;
 
             lock (_state)
             {
@@ -109,7 +109,7 @@ namespace Unidux
         }
 
         // Experimental feature to flush onetime state value
-        private void SetNullToOneTimeField(T state)
+        private void SetNullToOneTimeField(TState state)
         {
             var members = state.GetType().GetProperties();
             foreach (var member in members)
@@ -131,7 +131,7 @@ namespace Unidux
             }
         }
 
-        private void ResetStateChanged(T state)
+        private void ResetStateChanged(TState state)
         {
             var members = state.GetType().GetProperties();
             foreach (var member in members)

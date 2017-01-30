@@ -2,7 +2,7 @@
 {
     public interface IUniduxSubscriber
     {
-        void AddRenderTo<S>(Store<S> store, Renderer<S> render)
-            where S : StateBase<S>;
+        void AddRenderTo<TState>(Store<TState> store, Renderer<TState> render)
+            where TState : StateBase<TState>;
     }
 }

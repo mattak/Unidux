@@ -3,7 +3,7 @@
 namespace Unidux
 {
     [Serializable]
-    public class StateElement<T> : IState, IStateChanged
+    public class StateElement<TClass> : IState, IStateChanged
     {
         private bool _stateChanged = false;
 
