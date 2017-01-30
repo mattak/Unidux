@@ -14,7 +14,7 @@ Import unitypackage from [latest releases](https://github.com/mattak/Unidux/rele
 
 1) Create your Unidux singleton and place it to unity scene.
 
-```cs
+```csharp
 public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
 {
     partial void AddReducers(Store<State> store);
@@ -64,7 +64,7 @@ public sealed partial class Unidux
 
 2) Create state class to store application state.
 
-```cs
+```csharp
 using Unidux;
 public class State : StateBase<State>
 {
@@ -74,7 +74,7 @@ public class State : StateBase<State>
 
 3) Define action to change state. Define Reducer to move state.
 
-```cs
+```csharp
 public static class Count
 {
     public enum ActionType
@@ -120,7 +120,7 @@ public static class Count
 
 4) Create Renderer to display state and attach it to Text GameObject.
 
-```cs
+```csharp
 [RequireComponent(typeof(Text))]
 public class CountRenderer : MonoBehaviour
 {
@@ -140,7 +140,7 @@ public class CountRenderer : MonoBehaviour
 
 5) Create dispatcher to update count and attach it to GameObject.
 
-```cs
+```csharp
 [RequireComponent(typeof(Button))]
 public class CountDispatcher : MonoBehaviour
 {
