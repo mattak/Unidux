@@ -207,40 +207,40 @@ Store _store = new Store<State>(State);
 
 Get the state as passed to the constructor.
 
-### `<Store>.AddReducer<A>(<R>)`
+### `<Store>.AddReducer<TAction>(<TReducer>)`
 
-Add a Reducer which handles events of type `A`.
+Add a Reducer which handles events of type `TAction`.
 Only one reducer per type is allowed.
 
-Where `R` is a method which conforms to
+Where `TReducer` is a method which conforms to
 [`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
 
-### `<Store>.RemoveReducer<A>(<R>)`
+### `<Store>.RemoveReducer<TAction>(<TReducer>)`
 
 Remove a previously added reducer from the store.
 
-Where `R` is a method which conforms to
+Where `TReducer` is a method which conforms to
 [`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
 
-### `<Store>.AddRenderer(<R>)`
+### `<Store>.AddRenderer(<TRenderer>)`
 
 Add a Renderer to the store.
 Multiple renderers can be added based on uniqueness of `.GetHashCode()`
 
-Where `R` is a method which conforms to
+Where `TRenderer` is a method which conforms to
 [`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
 
-### `<Store>.RemoveRenderer(<R>)`
+### `<Store>.RemoveRenderer(<TRenderer>)`
 
 Remove a previously added renderer from the store.
 
-Where `R` is a method which conforms to
+Where `TRenderer` is a method which conforms to
 [`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
 
-### `<Store>.Dispatch<A>(<A>)`
+### `<Store>.Dispatch<TAction>(<TAction>)`
 
-Dispatch an event of type `A`,
-which will trigger a `Reducer<A>`.
+Dispatch an event of type `TAction`,
+which will trigger a `Reducer<TAction>`.
 
 ### `<Store>.Update()`
 
