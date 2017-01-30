@@ -15,6 +15,9 @@ Import unitypackage from [latest releases](https://github.com/mattak/Unidux/rele
 1) Create your Unidux singleton and place it to unity scene.
 
 ```csharp
+using UniRx;
+using Unidux;
+
 public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
 {
     partial void AddReducers(Store<State> store);
@@ -61,6 +64,9 @@ public sealed partial class Unidux
     }
 }
 ```
+
+_Note: `ReplaySubject` is a [ReactiveX concept](http://reactivex.io/documentation/subject.html)
+provided by [UniRx](https://github.com/neuecc/UniRx) in this example._
 
 2) Create state class to store application state.
 
@@ -169,6 +175,101 @@ That's it!
 # Dependencies
 
 - [UniRx](https://github.com/neuecc/UniRx) is refered on Example
+
+# API
+
+## `StateBase`
+
+```csharp
+public class State : StateBase<State>
+{
+    public int Count { get; set; }
+}
+```
+
+### `<StateBase>.Clone()`
+
+```csharp
+State _state = new State();
+State _clonedState = _state.Clone();
+```
+
+Create a deep clone of the current state. Useful for Immutability.
+
+## `Store`
+
+```csharp
+Store _store = new Store<State>(State);
+// State must extend StateBase
+```
+
+### `<Store>.State`
+
+Get the state as passed to the constructor.
+
+### `<Store>.AddReducer<A>(<R>)`
+
+Add a Reducer which handles events of type `A`.
+Only one reducer per type is allowed.
+
+Where `R` is a method which conforms to
+[`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
+
+### `<Store>.RemoveReducer<A>(<R>)`
+
+Remove a previously added reducer from the store.
+
+Where `R` is a method which conforms to
+[`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
+
+### `<Store>.AddRenderer(<R>)`
+
+Add a Renderer to the store.
+Multiple renderers can be added based on uniqueness of `.GetHashCode()`
+
+Where `R` is a method which conforms to
+[`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
+
+### `<Store>.RemoveRenderer(<R>)`
+
+Remove a previously added renderer from the store.
+
+Where `R` is a method which conforms to
+[`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
+
+### `<Store>.Dispatch<A>(<A>)`
+
+Dispatch an event of type `A`,
+which will trigger a `Reducer<A>`.
+
+### `<Store>.Update()`
+
+When at least one reducer has been executed,
+trigger all the renderers with a copy of the current state.
+
+### `<Store>.ForceUpdate()`
+
+Trigger all registered renderers with a copy of the current state
+regardless of any reducers having been executed.
+
+## `SingletonMonoBehaviour`
+
+```csharp
+public class Foo : SingletonMonoBehaviour<Foo> {}
+```
+
+A singleton base class to extend.
+Extends `MonoBehaviour`.
+
+### `<SingletonMonoBehaviour>.Instance`
+
+```csharp
+public class Foo : SingletonMonoBehaviour<Foo> {}
+
+Foo.Instance
+```
+
+The instance of the base class.
 
 # Thanks
 
