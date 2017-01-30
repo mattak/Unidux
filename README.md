@@ -174,6 +174,7 @@ That's it!
 
 - [@austinmao](https://github.com/austinmao) for suggestion of Ducks and UniRx.
 - [@pine](https://github.com/pine) for description improvement.
+- [@jesstelford](https://github.com/jesstelford) for fix document.
 
 # License
 
