@@ -1,13 +1,12 @@
 ﻿namespace Unidux
 {
-    public interface IStore<S> where S : StateBase<S>
+    public interface IStore<TState> where TState : StateBase<TState>
     {
-        // TODO: return Subscription
-        void AddRenderer(Renderer<S> renderer);
-        void RemoveRenderer(Renderer<S> renderer);
-        void AddReducer<A>(Reducer<S, A> reducer);
-        void RemoveReducer<A>(Reducer<S, A> reducer);
-        void Dispatch<A>(A action);
+        void AddRenderer(Renderer<TState> renderer);
+        void RemoveRenderer(Renderer<TState> renderer);
+        void AddReducer<TAction>(Reducer<TState, TAction> reducer);
+        void RemoveReducer<TAction>(Reducer<TState, TAction> reducer);
+        void Dispatch<TAction>(TAction action);
         void Update();
     }
 }

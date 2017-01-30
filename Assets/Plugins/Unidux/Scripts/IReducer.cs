@@ -1,4 +1,4 @@
 ﻿namespace Unidux
 {
-    public delegate S Reducer<S, in A>(S state, A action) where S : StateBase<S>;
+    public delegate TState Reducer<TState, in TAction>(TState state, TAction action) where TState : StateBase<TState>;
 }

@@ -2,21 +2,21 @@ using UnityEngine;
 
 namespace Unidux
 {
-    public class SingletonMonoBehaviour<T> : MonoBehaviour where T : SingletonMonoBehaviour<T>
+    public class SingletonMonoBehaviour<TClass> : MonoBehaviour where TClass : SingletonMonoBehaviour<TClass>
     {
-        protected static T instance;
+        protected static TClass instance;
 
-        public static T Instance
+        public static TClass Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = (T) FindObjectOfType(typeof(T));
+                    instance = (TClass) FindObjectOfType(typeof(TClass));
 
                     if (instance == null)
                     {
-                        Debug.LogWarning(typeof(T) + "is nothing");
+                        Debug.LogWarning(typeof(TClass) + "is nothing");
                     }
                 }
 
@@ -33,7 +33,7 @@ namespace Unidux
         {
             if (instance == null)
             {
-                instance = (T) this;
+                instance = (TClass) this;
                 return true;
             }
             else if (Instance == this)

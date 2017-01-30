@@ -8,7 +8,7 @@ namespace Unidux
     {
         private readonly Dictionary<int, Action> _renderSubscriberMap = new Dictionary<int, Action>();
 
-        public void AddRenderTo<S>(Store<S> store, Renderer<S> renderer) where S : StateBase<S>
+        public void AddRenderTo<TState>(Store<TState> store, Renderer<TState> renderer) where TState : StateBase<TState>
         {
             Action renderSubscriber = null;
             int key = renderer.GetHashCode();
