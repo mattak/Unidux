@@ -75,17 +75,16 @@ namespace Unidux
 
         public void ForceUpdate()
         {
-            _changed = false;
+            this._changed = false;
             TState fixedState;
 
-            lock (_state)
+            lock (this._state)
             {
                 // Prevent writing state object
-                fixedState = _state.Clone();
+                fixedState = this._state.Clone();
 
                 // The function may slow
-                SetNullToOneTimeField(_state);
-                ResetStateChanged(_state);
+                ResetStateChanged(this._state);
             }
 
             // NOTE: ToList is important to prevent 'InvalidOperationException: out of sync'
@@ -100,35 +99,12 @@ namespace Unidux
 
         public void Update()
         {
-            if (!_changed)
+            if (!this._changed)
             {
                 return;
             }
 
             ForceUpdate();
-        }
-
-        // Experimental feature to flush onetime state value
-        private void SetNullToOneTimeField(TState state)
-        {
-            var members = state.GetType().GetProperties();
-            foreach (var member in members)
-            {
-                var attribute = member.GetCustomAttributes(typeof(FlashAfterRenderAttribute), false);
-
-                if (attribute.Length > 0)
-                {
-                    // Only supports nullable value
-                    if (!member.GetType().IsPrimitive)
-                    {
-                        member.SetValue(state, null, null);
-                    }
-                    else
-                    {
-                        UnityEngine.Debug.LogWarning("FlashAfterRenderAttribute does not support primitive type.");
-                    }
-                }
-            }
         }
 
         private void ResetStateChanged(TState state)
