@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 namespace Unidux
@@ -10,9 +10,14 @@ namespace Unidux
         private delegate TState ReducerCaller(TState state, object action);
 
         private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
-        private readonly Dictionary<int, Renderer<TState>> _rendererDictionary;
         private TState _state;
         private bool _changed;
+        private Subject<TState> _subject;
+
+        public Subject<TState> Subject
+        {
+            get { return this._subject = this._subject ?? new Subject<TState>(); }
+        }
 
         public TState State
         {
@@ -24,33 +29,16 @@ namespace Unidux
             this._state = state;
             this._changed = false;
             this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
-            this._rendererDictionary = new Dictionary<int, Renderer<TState>>();
         }
 
         public void AddReducer<TAction>(Reducer<TState, TAction> reducer)
         {
-            this._reducerDictionary[typeof(TAction)] = (state, action) => reducer(state, (TAction)action);
+            this._reducerDictionary[typeof(TAction)] = (state, action) => reducer(state, (TAction) action);
         }
 
         public void RemoveReducer<TAction>(Reducer<TState, TAction> reducer)
         {
             this._reducerDictionary.Remove(typeof(TAction));
-        }
-
-        public void AddRenderer(Renderer<TState> renderer)
-        {
-            int key = renderer.GetHashCode();
-            this._rendererDictionary[key] = renderer;
-        }
-
-        public void RemoveRenderer(Renderer<TState> renderer)
-        {
-            int key = renderer.GetHashCode();
-
-            if (this._rendererDictionary.ContainsKey(key))
-            {
-                this._rendererDictionary.Remove(key);
-            }
         }
 
         public void Dispatch<TAction>(TAction action)
@@ -87,14 +75,7 @@ namespace Unidux
                 ResetStateChanged(this._state);
             }
 
-            // NOTE: ToList is important to prevent 'InvalidOperationException: out of sync'
-            foreach (var key in this._rendererDictionary.Keys.ToList())
-            {
-                if (this._rendererDictionary.ContainsKey(key))
-                {
-                    this._rendererDictionary[key](fixedState);
-                }
-            }
+            this.Subject.OnNext(fixedState);
         }
 
         public void Update()
@@ -104,7 +85,7 @@ namespace Unidux
                 return;
             }
 
-            ForceUpdate();
+            this.ForceUpdate();
         }
 
         private void ResetStateChanged(TState state)
@@ -115,7 +96,7 @@ namespace Unidux
                 var property = member.GetValue(state, null);
                 if (property is IStateChanged)
                 {
-                    var changedProperty = (IStateChanged)property;
+                    var changedProperty = (IStateChanged) property;
                     changedProperty.SetStateChanged(false);
                 }
             }
