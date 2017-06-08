@@ -7,11 +7,10 @@ namespace Unidux.Example.List
         partial void AddReducers(Store<State> store);
 
         private Store<State> _store;
-        private State _state;
 
         public static State State
         {
-            get { return Instance._state = Instance._state ?? new State(); }
+            get { return Store.State; }
         }
         
         public static Subject<State> Subject
@@ -25,7 +24,7 @@ namespace Unidux.Example.List
             {
                 if (Instance._store == null)
                 {
-                    Instance._store = new Store<State>(State);
+                    Instance._store = new Store<State>(new State());
                     Instance.AddReducers(Instance._store);
                 }
                 return Instance._store;

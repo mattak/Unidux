@@ -7,31 +7,30 @@ namespace Unidux.Example.Counter
         partial void AddReducers(Store<State> store);
 
         private Store<State> _store;
-        private State _state;
 
         public static State State
         {
-            get { return Instance._state = Instance._state ?? new State(); }
+            get { return Store.State; }
         }
 
         public static Subject<State> Subject
         {
             get { return Store.Subject; }
         }
-        
+
         public static Store<State> Store
         {
             get
             {
                 if (Instance._store == null)
                 {
-                    Instance._store = new Store<State>(State);
+                    Instance._store = new Store<State>(new State());
                     Instance.AddReducers(Instance._store);
                 }
                 return Instance._store;
             }
         }
-        
+
         public static void Dispatch<TAction>(TAction action)
         {
             Store.Dispatch(action);
