@@ -6,7 +6,6 @@ namespace Unidux.Example.Counter
     {
         partial void AddReducers(Store<State> store);
 
-        private ReplaySubject<State> _subject;
         private Store<State> _store;
         private State _state;
 
@@ -15,11 +14,11 @@ namespace Unidux.Example.Counter
             get { return Instance._state = Instance._state ?? new State(); }
         }
 
-        public static ReplaySubject<State> Subject
+        public static Subject<State> Subject
         {
-            get { return Instance._subject = Instance._subject ?? new ReplaySubject<State>(); }
+            get { return Store.Subject; }
         }
-
+        
         public static Store<State> Store
         {
             get
@@ -27,11 +26,15 @@ namespace Unidux.Example.Counter
                 if (Instance._store == null)
                 {
                     Instance._store = new Store<State>(State);
-                    Instance._store.AddRenderer(state => Subject.OnNext(state));
                     Instance.AddReducers(Instance._store);
                 }
                 return Instance._store;
             }
+        }
+        
+        public static void Dispatch<TAction>(TAction action)
+        {
+            Store.Dispatch(action);
         }
 
         void Update()

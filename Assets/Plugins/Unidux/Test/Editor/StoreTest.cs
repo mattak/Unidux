@@ -1,59 +1,29 @@
 ﻿using System;
 using NUnit.Framework;
+using Unidux.Rx;
+using UniRx;
 
 namespace Unidux
 {
     public class StoreTest
     {
         [Test]
-        public void RenderSubscribeTest()
+        public void SubscribeTest()
         {
             var store = new Store<State>(new State());
-            var render = new SampleRender();
-            store.AddRenderer(render.Render);
+            var observer = new TestObserver<State>();
+
+            store.Subject.Subscribe(observer);
+            Assert.AreEqual(0, observer.OnNextCount);
+            Assert.AreEqual(0, observer.OnErrorCount);
+            Assert.AreEqual(0, observer.OnCompletedCount);
 
             store.Dispatch(new Action());
             store.ForceUpdate();
-            Assert.AreEqual(1, render.Count);
 
-            store.Dispatch(new Action());
-            store.ForceUpdate();
-            Assert.AreEqual(2, render.Count);
-
-            store.RemoveRenderer(render.Render);
-
-            store.Dispatch(new Action());
-            store.ForceUpdate();
-            Assert.AreEqual(2, render.Count);
-        }
-
-        [Test]
-        public void RenderMultipleSubscribeTest()
-        {
-            var store = new Store<State>(new State());
-            var count1 = 0;
-            var count2 = 0;
-            Unidux.Renderer<State> render1 = (State state) => { count1++; };
-            Unidux.Renderer<State> render2 = (State state) => { count2++; };
-
-            store.AddRenderer(render1);
-            store.AddRenderer(render2);
-
-            store.ForceUpdate();
-            Assert.AreEqual(1, count1);
-            Assert.AreEqual(1, count2);
-
-            store.RemoveRenderer(render1);
-
-            store.ForceUpdate();
-            Assert.AreEqual(1, count1);
-            Assert.AreEqual(2, count2);
-
-            store.RemoveRenderer(render2);
-
-            store.ForceUpdate();
-            Assert.AreEqual(1, count1);
-            Assert.AreEqual(2, count2);
+            Assert.AreEqual(1, observer.OnNextCount);
+            Assert.AreEqual(0, observer.OnErrorCount);
+            Assert.AreEqual(0, observer.OnCompletedCount);
         }
 
         [Test]
@@ -80,7 +50,7 @@ namespace Unidux
             var store = new Store<State>(new State());
             var count = 0;
 
-            store.AddRenderer((state) =>
+            store.Subject.Subscribe(state =>
             {
                 count++;
                 Assert.IsTrue(state.Changed.IsStateChanged());
@@ -112,16 +82,6 @@ namespace Unidux
 
         class Action
         {
-        }
-
-        class SampleRender
-        {
-            public int Count = 0;
-
-            public void Render(State state)
-            {
-                Count++;
-            }
         }
 
         class SampleReducer
