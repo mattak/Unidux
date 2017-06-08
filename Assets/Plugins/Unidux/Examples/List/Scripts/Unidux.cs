@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using UniRx;
+﻿using UniRx;
 
 namespace Unidux.Example.List
 {
@@ -7,7 +6,6 @@ namespace Unidux.Example.List
     {
         partial void AddReducers(Store<State> store);
 
-        private ReplaySubject<State> _subject;
         private Store<State> _store;
         private State _state;
 
@@ -15,10 +13,10 @@ namespace Unidux.Example.List
         {
             get { return Instance._state = Instance._state ?? new State(); }
         }
-
-        public static ReplaySubject<State> Subject
+        
+        public static Subject<State> Subject
         {
-            get { return Instance._subject = Instance._subject ?? new ReplaySubject<State>(); }
+            get { return Store.Subject; }
         }
 
         public static Store<State> Store
@@ -28,7 +26,6 @@ namespace Unidux.Example.List
                 if (Instance._store == null)
                 {
                     Instance._store = new Store<State>(State);
-                    Instance._store.AddRenderer(state => Subject.OnNext(state));
                     Instance.AddReducers(Instance._store);
                 }
                 return Instance._store;
