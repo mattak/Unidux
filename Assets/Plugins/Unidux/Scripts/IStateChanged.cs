@@ -2,7 +2,7 @@
 {
     public interface IStateChanged
     {
-        bool IsStateChanged();
+        bool IsStateChanged { get; }
 
         void SetStateChanged(bool state);
     }

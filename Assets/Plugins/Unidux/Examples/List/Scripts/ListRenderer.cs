@@ -12,7 +12,7 @@ namespace Unidux.Example.List
         {
             Unidux.Subject
                 .TakeUntilDisable(this)
-                .Where(state => state.List.IsStateChanged())
+                .Where(state => state.List.IsStateChanged)
                 .StartWith(Unidux.State)
                 .Subscribe(state => this.Render(state))
                 .AddTo(this)

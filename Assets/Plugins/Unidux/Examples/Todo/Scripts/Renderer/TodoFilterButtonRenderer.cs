@@ -14,7 +14,7 @@ namespace Unidux.Example.Todo
             var button = this.GetComponent<Button>();
 
             Unidux.Subject
-                .Where(state => state.Todo.IsStateChanged())
+                .Where(state => state.Todo.IsStateChanged)
                 .StartWith(Unidux.State)
                 .Subscribe(state => button.interactable = Filter != state.Todo.Filter)
                 .AddTo(this);

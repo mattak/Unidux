@@ -46,14 +46,14 @@ namespace Unidux
             store.Subject.Subscribe(state =>
             {
                 count++;
-                Assert.IsTrue(state.Changed.IsStateChanged());
+                Assert.IsTrue(state.Changed.IsStateChanged);
             });
 
-            Assert.IsFalse(store.State.Changed.IsStateChanged());
+            Assert.IsFalse(store.State.Changed.IsStateChanged);
             store.State.Changed.SetStateChanged();
 
             store.ForceUpdate();
-            Assert.IsFalse(store.State.Changed.IsStateChanged());
+            Assert.IsFalse(store.State.Changed.IsStateChanged);
             Assert.AreEqual(1, count);
         }
 

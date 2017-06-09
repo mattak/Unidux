@@ -7,9 +7,9 @@ namespace Unidux
     {
         private bool _stateChanged = false;
 
-        public bool IsStateChanged()
+        public bool IsStateChanged
         {
-            return _stateChanged;
+            get { return this._stateChanged; }
         }
 
         public void SetStateChanged(bool changed = true)
