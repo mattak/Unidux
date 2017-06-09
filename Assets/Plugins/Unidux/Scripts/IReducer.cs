@@ -1,4 +1,8 @@
 ﻿namespace Unidux
 {
-    public delegate TState Reducer<TState, in TAction>(TState state, TAction action) where TState : StateBase<TState>;
+    public interface IReducer
+    {
+        bool IsMatchedAction(object action);
+        object ReduceAny(object state, object action);
+    }
 }

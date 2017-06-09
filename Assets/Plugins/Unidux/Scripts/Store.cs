@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
 namespace Unidux
 {
     public class Store<TState> : IStore<TState> where TState : StateBase<TState>
     {
-        private delegate TState ReducerCaller(TState state, object action);
-
-        private readonly Dictionary<Type, ReducerCaller> _reducerDictionary;
         private TState _state;
         private bool _changed;
         private Subject<TState> _subject;
+        private IReducer[] _matchers;
 
         public Subject<TState> Subject
         {
@@ -24,33 +20,20 @@ namespace Unidux
             get { return _state; }
         }
 
-        public Store(TState state)
+        public Store(TState state, params IReducer[] matchers)
         {
             this._state = state;
             this._changed = false;
-            this._reducerDictionary = new Dictionary<Type, ReducerCaller>();
+            this._matchers = matchers ?? new IReducer[0];
         }
-
-        public void AddReducer<TAction>(Reducer<TState, TAction> reducer)
-        {
-            this._reducerDictionary[typeof(TAction)] = (state, action) => reducer(state, (TAction) action);
-        }
-
-        public void RemoveReducer<TAction>(Reducer<TState, TAction> reducer)
-        {
-            this._reducerDictionary.Remove(typeof(TAction));
-        }
-
+        
         public void Dispatch<TAction>(TAction action)
         {
-            foreach (var reducerEntry in this._reducerDictionary)
+            foreach (var matcher in this._matchers)
             {
-                var type = reducerEntry.Key;
-                var reducer = reducerEntry.Value;
-
-                if (type.Equals(action.GetType()))
+                if (matcher.IsMatchedAction(action))
                 {
-                    this._state = reducer(this.State, action);
+                    this._state = (TState)matcher.ReduceAny(this.State, action);
                     this._changed = true;
                 }
             }

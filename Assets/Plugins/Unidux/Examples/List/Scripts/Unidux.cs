@@ -4,15 +4,13 @@ namespace Unidux.Example.List
 {
     public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
     {
-        partial void AddReducers(Store<State> store);
-
         private Store<State> _store;
 
         public static State State
         {
             get { return Store.State; }
         }
-        
+
         public static Subject<State> Subject
         {
             get { return Store.Subject; }
@@ -20,15 +18,7 @@ namespace Unidux.Example.List
 
         public static Store<State> Store
         {
-            get
-            {
-                if (Instance._store == null)
-                {
-                    Instance._store = new Store<State>(new State());
-                    Instance.AddReducers(Instance._store);
-                }
-                return Instance._store;
-            }
+            get { return Instance._store = Instance._store ?? new Store<State>(new State(), new List.Reducer()); }
         }
 
         public static void Dispatch<TAction>(TAction action)

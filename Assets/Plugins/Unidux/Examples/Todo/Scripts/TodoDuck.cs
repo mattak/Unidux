@@ -37,19 +37,22 @@ namespace Unidux.Example.Todo
             }
         }
 
-        public static State Reducer(State state, Action action)
+        public class Reducer : ReducerBase<State, Action>
         {
-            switch (action.ActionType)
+            public override State Reduce(State state, Action action)
             {
-                case ActionType.ADD_TODO:
-                    state.Todo = AddTodo(state.Todo, action.Todo.Text);
-                    return state;
-                case ActionType.TOGGLE_TODO:
-                    state.Todo = ToggleTodo(state.Todo, action.Todo);
-                    return state;
-            }
+                switch (action.ActionType)
+                {
+                    case ActionType.ADD_TODO:
+                        state.Todo = AddTodo(state.Todo, action.Todo.Text);
+                        return state;
+                    case ActionType.TOGGLE_TODO:
+                        state.Todo = ToggleTodo(state.Todo, action.Todo);
+                        return state;
+                }
 
-            return state;
+                return state;
+            }
         }
 
         public static TodoState AddTodo(TodoState state, string text)

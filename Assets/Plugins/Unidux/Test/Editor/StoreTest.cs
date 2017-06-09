@@ -27,21 +27,14 @@ namespace Unidux
         }
 
         [Test]
-        public void ReducerSubscribeTest()
+        public void ReducerTest()
         {
-            var store = new Store<State>(new State());
             var reducer = new SampleReducer();
-            store.AddReducer<Action>(reducer.Reduce);
-
+            var store = new Store<State>(new State(), reducer);
+            
+            Assert.AreEqual(0, reducer.count);
             store.Dispatch(new Action());
-            Assert.AreEqual(1, reducer.Count);
-
-            store.Dispatch(new Action());
-            Assert.AreEqual(2, reducer.Count);
-
-            store.RemoveReducer<Action>(reducer.Reduce);
-            store.Dispatch(new Action());
-            Assert.AreEqual(2, reducer.Count);
+            Assert.AreEqual(1, reducer.count);
         }
 
         [Test]
@@ -84,13 +77,13 @@ namespace Unidux
         {
         }
 
-        class SampleReducer
+        class SampleReducer : ReducerBase<State, Action>
         {
-            public int Count = 0;
-
-            public State Reduce(State state, Action action)
+            public int count = 0;
+            
+            public override State Reduce(State state, Action action)
             {
-                Count++;
+                count++;
                 return state;
             }
         }

@@ -25,16 +25,19 @@ namespace Unidux.Example.Todo
             }
         }
 
-        public static State Reducer(State state, Action action)
+        public class Reducer : ReducerBase<State, Action>
         {
-            switch (action.ActionType)
+            public override State Reduce(State state, Action action)
             {
-                case ActionType.SET_VISIBILITY:
-                    state.Todo = SetVisibility(state.Todo, action.Filter);
-                    return state;
-            }
+                switch (action.ActionType)
+                {
+                    case ActionType.SET_VISIBILITY:
+                        state.Todo = SetVisibility(state.Todo, action.Filter);
+                        return state;
+                }
 
-            return state;
+                return state;
+            }
         }
 
         public static TodoState SetVisibility(TodoState state, VisibilityFilter filter)

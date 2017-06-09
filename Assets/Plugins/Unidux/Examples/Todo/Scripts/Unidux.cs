@@ -2,10 +2,8 @@ using UniRx;
 
 namespace Unidux.Example.Todo
 {
-    public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
+    public sealed class Unidux : SingletonMonoBehaviour<Unidux>
     {
-        partial void AddReducers(Store<State> store);
-
         private Store<State> _store;
 
         public static State State
@@ -18,17 +16,14 @@ namespace Unidux.Example.Todo
             get { return Store.Subject; }
         }
 
+        private static IReducer[] Reducers
+        {
+            get { return new IReducer[] {new TodoDuck.Reducer(), new TodoVisibilityDuck.Reducer()}; }
+        }
+
         public static Store<State> Store
         {
-            get
-            {
-                if (Instance._store == null)
-                {
-                    Instance._store = new Store<State>(new State());
-                    Instance.AddReducers(Instance._store);
-                }
-                return Instance._store;
-            }
+            get { return Instance._store = Instance._store ?? new Store<State>(new State(), Reducers); }
         }
 
         public static void Dispatch<TAction>(TAction action)
