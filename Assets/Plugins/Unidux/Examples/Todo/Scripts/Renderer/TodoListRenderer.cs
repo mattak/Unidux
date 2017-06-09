@@ -9,7 +9,7 @@ namespace Unidux.Example.Todo
         void Start()
         {
             Unidux.Subject
-                .Where(state => state.Todo.IsStateChanged())
+                .Where(state => state.Todo.IsStateChanged)
                 .Subscribe(state => this.Render(this.transform, this.Cell, state.Todo.ListByFilter))
                 .AddTo(this);
         }
