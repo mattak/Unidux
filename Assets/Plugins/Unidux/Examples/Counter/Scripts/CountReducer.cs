@@ -14,23 +14,7 @@
         {
             public ActionType ActionType;
         }
-
-        // reducers handle state changes
-        public static State Reducer(State state, Action action)
-        {
-            switch (action.ActionType)
-            {
-                case ActionType.Increment:
-                    state.Count++;
-                    break;
-                case ActionType.Decrement:
-                    state.Count--;
-                    break;
-            }
-
-            return state;
-        }
-
+        
         // ActionCreators creates actions and deliver payloads
         // in redux, you do not dispatch from the ActionCreator to allow for easy testability
         public static class ActionCreator
@@ -48,6 +32,25 @@
             public static Action Decrement()
             {
                 return new Action() {ActionType = ActionType.Decrement};
+            }
+        }
+
+        // reducers handle state changes
+        public class Reducer : ReducerBase<State, Action>
+        {
+            public override State Reduce(State state, Action action)
+            {
+                switch (action.ActionType)
+                {
+                    case ActionType.Increment:
+                        state.Count++;
+                        break;
+                    case ActionType.Decrement:
+                        state.Count--;
+                        break;
+                }
+
+                return state;
             }
         }
     }
