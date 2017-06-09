@@ -4,23 +4,23 @@ namespace Unidux
 {
     public class SingletonMonoBehaviour<TClass> : MonoBehaviour where TClass : SingletonMonoBehaviour<TClass>
     {
-        protected static TClass instance;
+        protected static TClass _instance;
 
         public static TClass Instance
         {
             get
             {
-                if (instance == null)
+                if (_instance == null)
                 {
-                    instance = (TClass) FindObjectOfType(typeof(TClass));
+                    _instance = (TClass) FindObjectOfType(typeof(TClass));
 
-                    if (instance == null)
+                    if (_instance == null)
                     {
                         Debug.LogWarning(typeof(TClass) + "is nothing");
                     }
                 }
 
-                return instance;
+                return _instance;
             }
         }
 
@@ -31,12 +31,12 @@ namespace Unidux
 
         protected bool CheckInstance()
         {
-            if (instance == null)
+            if (_instance == null)
             {
-                instance = (TClass) this;
+                _instance = (TClass) this;
                 return true;
             }
-            else if (Instance == this)
+            else if (_instance == this)
             {
                 return true;
             }
