@@ -2,7 +2,7 @@
 
 namespace Unidux
 {
-    public interface IStore<TState> where TState : StateBase<TState>
+    public interface IStore<TState> where TState : StateBase
     {
         TState State { get; }
         Subject<TState> Subject { get; }

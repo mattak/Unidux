@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Unidux
 {
-    public class Store<TState> : IStore<TState> where TState : StateBase<TState>
+    public class Store<TState> : IStore<TState> where TState : StateBase
     {
         private TState _state;
         private bool _changed;
@@ -52,7 +52,7 @@ namespace Unidux
             lock (this._state)
             {
                 // Prevent writing state object
-                fixedState = this._state.Clone();
+                fixedState = this._state.Clone<TState>();
 
                 // The function may slow
                 ResetStateChanged(this._state);
