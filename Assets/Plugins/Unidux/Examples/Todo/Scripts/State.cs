@@ -5,7 +5,7 @@ using System.Linq;
 namespace Unidux.Example.Todo
 {
     [Serializable]
-    public class State : StateBase<State>
+    public class State : StateBase
     {
         public TodoState Todo { get; set; }
 
@@ -16,7 +16,7 @@ namespace Unidux.Example.Todo
     }
 
     [Serializable]
-    public class TodoState : StateElement<TodoState>
+    public class TodoState : StateElement
     {
         public uint Index = 0;
         public List<Todo> List = new List<Todo>();

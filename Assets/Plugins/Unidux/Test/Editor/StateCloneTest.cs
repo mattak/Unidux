@@ -3,7 +3,7 @@ namespace Unidux
 {
     public class StateCloneTest
     {
-        class Hoge<T> : IStateClone<T>
+        class Hoge : IStateClone
         {
             private bool Flag = false;
 
@@ -17,13 +17,13 @@ namespace Unidux
                 return this.Flag;
             }
 
-            public T Clone()
+            public T Clone<T>() where T : IStateClone
             {
                 return (T) MemberwiseClone();
             }
         }
 
-        class HogeHoge : Hoge<HogeHoge>
+        class HogeHoge : Hoge
         {
             private int Count = 1;
 
@@ -47,7 +47,7 @@ namespace Unidux
             Assert.AreEqual(true, hoge1.GetFlag());
             Assert.AreEqual(100, hoge1.GetCount());
 
-            var hoge2 = hoge1.Clone();
+            var hoge2 = hoge1.Clone<HogeHoge>();
             Assert.AreEqual(true, hoge2.GetFlag());
             Assert.AreEqual(100, hoge2.GetCount());
         }

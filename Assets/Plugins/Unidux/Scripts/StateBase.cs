@@ -5,9 +5,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Unidux
 {
     [Serializable]
-    public class StateBase<TValue> : IState, IStateClone<TValue>
+    public class StateBase : IState, IStateClone
     {
-        public virtual TValue Clone()
+        public virtual TValue Clone<TValue>() where TValue : IStateClone
         {
             TValue result;
             BinaryFormatter formatter = new BinaryFormatter();

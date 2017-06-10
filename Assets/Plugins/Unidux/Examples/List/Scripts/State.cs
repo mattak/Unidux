@@ -3,7 +3,7 @@
 namespace Unidux.Example.List
 {
     [Serializable]
-    public class State : StateBase<State>
+    public class State : StateBase
     {
         public ListState List { get; private set; }
 
