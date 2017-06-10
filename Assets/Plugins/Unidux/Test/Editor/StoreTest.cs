@@ -58,7 +58,7 @@ namespace Unidux
         }
 
         [Serializable]
-        class State : StateBase<State>
+        class State : StateBase
         {
             public ChangedState Changed { get; set; }
 
@@ -69,7 +69,7 @@ namespace Unidux
         }
 
         [Serializable]
-        class ChangedState : StateElement<ChangedState>
+        class ChangedState : StateElement
         {
         }
 
