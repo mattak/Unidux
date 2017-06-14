@@ -17,7 +17,7 @@ namespace Unidux.Example.Todo
 
         public object StateObject
         {
-            get { return (object) State; }
+            get { return State; }
             set { Store.State = (State) value; }
         }
 
@@ -36,15 +36,19 @@ namespace Unidux.Example.Todo
             get { return new IReducer[] {new TodoDuck.Reducer(), new TodoVisibilityDuck.Reducer()}; }
         }
 
-        public static Store<State> Store
+        private static State InitialState
         {
             get
             {
-                var state = (Instance.InitialStateJson != null)
+                return Instance.InitialStateJson != null
                     ? JsonUtility.FromJson<State>(Instance.InitialStateJson.text)
                     : new State();
-                return Instance._store = Instance._store ?? new Store<State>(state, Reducers);
             }
+        }
+
+        public static Store<State> Store
+        {
+            get { return Instance._store = Instance._store ?? new Store<State>(InitialState, Reducers); }
         }
 
         public static void Dispatch<TAction>(TAction action)
