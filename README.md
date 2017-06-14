@@ -174,7 +174,8 @@ That's it!
 
 # Dependencies
 
-- [UniRx](https://github.com/neuecc/UniRx) is refered on Example
+- [UniRx](https://github.com/neuecc/UniRx)
+- [MiniJSON](https://gist.github.com/darktable/1411710) is used on Unidux.Experimental.Editor.StateJsonEditor
 
 # API
 
