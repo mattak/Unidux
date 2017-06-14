@@ -31,7 +31,7 @@ namespace Unidux
             this._changed = false;
             this._matchers = matchers ?? new IReducer[0];
         }
-        
+
         public void Dispatch<TAction>(TAction action)
         {
             foreach (var matcher in this._matchers)
@@ -79,19 +79,29 @@ namespace Unidux
         private bool UpdateStateChanged(TState oldState, TState newState)
         {
             bool stateChanged = false;
-            
-            foreach (var field in newState.GetType().GetFields())
+            bool hasNoStateChangedFields = true;
+            var fields = newState.GetType().GetFields();
+
+            foreach (var field in fields)
             {
                 var newValue = field.GetValue(newState);
                 var oldValue = field.GetValue(oldState);
 
-                if (newValue != null && newValue is IStateChanged && !newValue.Equals(oldValue))
+                if (newValue != null && newValue is IStateChanged)
                 {
-                    ((IStateChanged) newValue).SetStateChanged();
-                    stateChanged = true;
+                    hasNoStateChangedFields = false;
+
+                    if (!newValue.Equals(oldValue))
+                    {
+                        ((IStateChanged) newValue).SetStateChanged();
+                        stateChanged = true;
+                    }
                 }
             }
-            
+
+            // if there is no IStateChanged field, it should be marked as state changed to activate Update function.
+            stateChanged |= hasNoStateChangedFields;
+
             return stateChanged;
         }
 
