@@ -4,6 +4,6 @@
     {
         bool IsStateChanged { get; }
 
-        void SetStateChanged(bool state);
+        void SetStateChanged(bool state = true);
     }
 }

@@ -8,7 +8,7 @@ namespace Unidux
         private TState _state;
         private bool _changed;
         private Subject<TState> _subject;
-        private IReducer[] _matchers;
+        private readonly IReducer[] _matchers;
 
         public Subject<TState> Subject
         {
@@ -18,6 +18,11 @@ namespace Unidux
         public TState State
         {
             get { return _state; }
+            set
+            {
+                this._changed = this.UpdateStateChanged(this._state, value);
+                this._state = value;
+            }
         }
 
         public Store(TState state, params IReducer[] matchers)
@@ -33,7 +38,7 @@ namespace Unidux
             {
                 if (matcher.IsMatchedAction(action))
                 {
-                    this._state = (TState)matcher.ReduceAny(this.State, action);
+                    this._state = (TState) matcher.ReduceAny(this.State, action);
                     this._changed = true;
                 }
             }
@@ -69,6 +74,25 @@ namespace Unidux
             }
 
             this.ForceUpdate();
+        }
+
+        private bool UpdateStateChanged(TState oldState, TState newState)
+        {
+            bool stateChanged = false;
+            
+            foreach (var field in newState.GetType().GetFields())
+            {
+                var newValue = field.GetValue(newState);
+                var oldValue = field.GetValue(oldState);
+
+                if (newValue != null && newValue is IStateChanged && !newValue.Equals(oldValue))
+                {
+                    ((IStateChanged) newValue).SetStateChanged();
+                    stateChanged = true;
+                }
+            }
+            
+            return stateChanged;
         }
 
         private void ResetStateChanged(TState state)
