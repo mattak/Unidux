@@ -57,6 +57,7 @@ namespace Unidux.Experimental.Editor
             {
                 string content = Json.Serialize(this.fileJson);
                 File.WriteAllText(wrapper.FileName, content);
+                AssetDatabase.Refresh();
             }
         }
 
