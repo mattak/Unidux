@@ -1,14 +1,29 @@
+using System;
 using UniRx;
+using UnityEngine;
 
 namespace Unidux.Example.Todo
 {
-    public sealed class Unidux : SingletonMonoBehaviour<Unidux>
+    public sealed class Unidux : SingletonMonoBehaviour<Unidux>, IStoreAccessor
     {
+        public TextAsset InitialStateJson;
+
         private Store<State> _store;
 
         public static State State
         {
             get { return Store.State; }
+        }
+
+        public object StateObject
+        {
+            get { return State; }
+            set { Store.State = (State) value; }
+        }
+
+        public Type StateType
+        {
+            get { return typeof(State); }
         }
 
         public static Subject<State> Subject
@@ -21,9 +36,19 @@ namespace Unidux.Example.Todo
             get { return new IReducer[] {new TodoDuck.Reducer(), new TodoVisibilityDuck.Reducer()}; }
         }
 
+        private static State InitialState
+        {
+            get
+            {
+                return Instance.InitialStateJson != null
+                    ? JsonUtility.FromJson<State>(Instance.InitialStateJson.text)
+                    : new State();
+            }
+        }
+
         public static Store<State> Store
         {
-            get { return Instance._store = Instance._store ?? new Store<State>(new State(), Reducers); }
+            get { return Instance._store = Instance._store ?? new Store<State>(InitialState, Reducers); }
         }
 
         public static void Dispatch<TAction>(TAction action)

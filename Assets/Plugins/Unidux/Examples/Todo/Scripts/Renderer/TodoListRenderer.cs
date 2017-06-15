@@ -10,6 +10,7 @@ namespace Unidux.Example.Todo
         {
             Unidux.Subject
                 .Where(state => state.Todo.IsStateChanged)
+                .StartWith(Unidux.State)
                 .Subscribe(state => this.Render(this.transform, this.Cell, state.Todo.ListByFilter))
                 .AddTo(this);
         }

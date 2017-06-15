@@ -7,12 +7,7 @@ namespace Unidux.Example.Todo
     [Serializable]
     public class State : StateBase
     {
-        public TodoState Todo { get; set; }
-
-        public State()
-        {
-            this.Todo = new TodoState();
-        }
+        public TodoState Todo = new TodoState();
     }
 
     [Serializable]

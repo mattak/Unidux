@@ -4,7 +4,7 @@ namespace Unidux
 {
     public interface IStore<TState> where TState : StateBase
     {
-        TState State { get; }
+        TState State { get; set; }
         Subject<TState> Subject { get; }
         
         void Dispatch<TAction>(TAction action);
