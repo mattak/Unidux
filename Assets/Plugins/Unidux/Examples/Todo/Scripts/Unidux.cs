@@ -1,4 +1,3 @@
-using System;
 using UniRx;
 using UnityEngine;
 
@@ -10,20 +9,14 @@ namespace Unidux.Example.Todo
 
         private Store<State> _store;
 
+        public IStoreObject StoreObject
+        {
+            get { return Store; }
+        }
+
         public static State State
         {
             get { return Store.State; }
-        }
-
-        public object StateObject
-        {
-            get { return State; }
-            set { Store.State = (State) value; }
-        }
-
-        public Type StateType
-        {
-            get { return typeof(State); }
         }
 
         public static Subject<State> Subject
@@ -51,9 +44,9 @@ namespace Unidux.Example.Todo
             get { return Instance._store = Instance._store ?? new Store<State>(InitialState, Reducers); }
         }
 
-        public static void Dispatch<TAction>(TAction action)
+        public static object Dispatch<TAction>(TAction action)
         {
-            Store.Dispatch(action);
+            return Store.Dispatch(action);
         }
 
         void Update()

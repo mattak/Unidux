@@ -126,7 +126,7 @@ namespace Unidux.Experimental.Editor
 
             if (existsJson && GUILayout.Button("Save"))
             {
-                var json = JsonUtility.ToJson(this._store.StateObject);
+                var json = JsonUtility.ToJson(this._store.StoreObject.ObjectState);
                 File.WriteAllText(jsonPath, json);
                 AssetDatabase.Refresh();
             }
@@ -134,7 +134,7 @@ namespace Unidux.Experimental.Editor
             if (existsJson && GUILayout.Button("Load"))
             {
                 var content = File.ReadAllText(jsonPath);
-                this._store.StateObject = JsonUtility.FromJson(content, this._store.StateType);
+                this._store.StoreObject.ObjectState = JsonUtility.FromJson(content, this._store.StoreObject.StateType);
             }
             EditorGUILayout.EndHorizontal();
         }
