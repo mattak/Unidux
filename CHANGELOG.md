@@ -1,3 +1,27 @@
+# 2017-06-27 v0.3.0
+
+Breaking Changes
+- Store interface is heavily changed for supporting new features.
+- Remove IRenderer, IUniduxSubscriber https://github.com/mattak/Unidux/issues/80
+- IsStateChanged() => IsStateChanged https://github.com/mattak/Unidux/issues/78
+- Remove generics restriction of IStateClone https://github.com/mattak/Unidux/issues/82
+- Discard AddRenderer & Replace it by UniRx.Subject https://github.com/mattak/Unidux/issues/73
+- Discard onetime value support https://github.com/mattak/Unidux/issues/56
+- Discard Binder https://github.com/mattak/Unidux/issues/62
+
+Features
+- Support deep cloning of State object https://github.com/mattak/Unidux/issues/46
+- get state interface to IStore https://github.com/mattak/Unidux/issues/72
+- Simplify reducer implementation https://github.com/mattak/Unidux/issues/24
+- EdtiorExtension for saving state & reloading state https://github.com/mattak/Unidux/issues/47
+- Bump version to Unity 5.6.1 https://github.com/mattak/Unidux/issues/85
+- Middleware support https://github.com/mattak/Unidux/issues/55
+
+Etc
+- More explanatory generic arguments in docs https://github.com/mattak/Unidux/pull/68
+- Replace one character generic argument to be more explanatory https://github.com/mattak/Unidux/issues/67
+- Enable syntax highlighting in docs https://github.com/mattak/Unidux/pull/65
+
 # 2017-01-10 v0.2.2
 
 Features
