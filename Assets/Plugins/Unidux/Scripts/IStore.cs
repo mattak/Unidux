@@ -1,4 +1,5 @@
-﻿using UniRx;
+﻿using System;
+using UniRx;
 
 namespace Unidux
 {
@@ -7,7 +8,14 @@ namespace Unidux
         TState State { get; set; }
         Subject<TState> Subject { get; }
         
-        void Dispatch<TAction>(TAction action);
+        object Dispatch(object action);
         void Update();
+    }
+
+    public interface IStoreObject
+    {
+        object ObjectState { get; set; }
+        UniRx.IObservable<object> ObjectSubject { get; }
+        Type StateType { get; }
     }
 }
