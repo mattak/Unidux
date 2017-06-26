@@ -1,5 +1,4 @@
-﻿using System;
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
 namespace Unidux.Example.Counter
@@ -10,30 +9,19 @@ namespace Unidux.Example.Counter
 
         private Store<State> _store;
 
+        public IStoreObject StoreObject
+        {
+            get { return Store; }
+        }
+
         public static State State
         {
             get { return Store.State; }
         }
 
-        public object StateObject
-        {
-            get { return State; }
-            set { Store.State = (State) value; }
-        }
-
-        public Type StateType
-        {
-            get { return typeof(State); }
-        }
-
         public static Subject<State> Subject
         {
             get { return Store.Subject; }
-        }
-
-        private static IReducer[] Reducers
-        {
-            get { return new IReducer[] {new Count.Reducer()}; }
         }
 
         private static State InitialState
@@ -48,12 +36,12 @@ namespace Unidux.Example.Counter
 
         public static Store<State> Store
         {
-            get { return Instance._store = Instance._store ?? new Store<State>(InitialState, Reducers); }
+            get { return Instance._store = Instance._store ?? new Store<State>(InitialState, new Count.Reducer()); }
         }
 
-        public static void Dispatch<TAction>(TAction action)
+        public static object Dispatch<TAction>(TAction action)
         {
-            Store.Dispatch(action);
+            return Store.Dispatch(action);
         }
 
         void Update()

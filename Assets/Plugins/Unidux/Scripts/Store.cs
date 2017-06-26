@@ -1,14 +1,17 @@
-﻿using UniRx;
+﻿using System;
+using System.Linq;
+using UniRx;
 using UnityEngine;
 
 namespace Unidux
 {
-    public class Store<TState> : IStore<TState> where TState : StateBase
+    public class Store<TState> : IStore<TState>, IStoreObject where TState : StateBase
     {
         private TState _state;
         private bool _changed;
         private Subject<TState> _subject;
         private readonly IReducer[] _matchers;
+        private Func<object, object> _dispatcher;
 
         public Subject<TState> Subject
         {
@@ -17,12 +20,28 @@ namespace Unidux
 
         public TState State
         {
-            get { return _state; }
+            get { return this._state; }
             set
             {
                 this._changed = this.UpdateStateChanged(this._state, value);
                 this._state = value;
             }
+        }
+
+        public object ObjectState
+        {
+            get { return this.State; }
+            set { this.State = (TState) value; }
+        }
+
+        public UniRx.IObservable<object> ObjectSubject
+        {
+            get { return this.Subject.Select(it => (object) it); }
+        }
+
+        public Type StateType
+        {
+            get { return typeof(TState); }
         }
 
         public Store(TState state, params IReducer[] matchers)
@@ -32,7 +51,29 @@ namespace Unidux
             this._matchers = matchers ?? new IReducer[0];
         }
 
-        public void Dispatch<TAction>(TAction action)
+        public void ApplyMiddlewares(params Middleware[] middlewares)
+        {
+            this._dispatcher = (object _action) => { return this._Dispatch(_action); };
+            
+            foreach (var middleware in middlewares.Reverse())
+            {
+                this._dispatcher = middleware(this)(this._dispatcher);
+            }
+        }
+
+        public object Dispatch(object action)
+        {
+            if (this._dispatcher == null)
+            {
+                return this._Dispatch(action);
+            }
+            else
+            {
+                return this._dispatcher(action);
+            }
+        }
+
+        private object _Dispatch(object action)
         {
             foreach (var matcher in this._matchers)
             {
@@ -47,6 +88,8 @@ namespace Unidux
             {
                 Debug.LogWarning("'Store.Dispatch(" + action + ")' was failed. Maybe you forget to assign reducer.");
             }
+
+            return null;
         }
 
         public void ForceUpdate()

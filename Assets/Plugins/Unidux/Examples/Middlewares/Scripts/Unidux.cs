@@ -1,9 +1,9 @@
-using UniRx;
+﻿using UniRx;
 using UnityEngine;
 
-namespace Unidux.Example.Todo
+namespace Unidux.Example.Middlewares
 {
-    public sealed class Unidux : SingletonMonoBehaviour<Unidux>, IStoreAccessor
+    public class Unidux : SingletonMonoBehaviour<Unidux>
     {
         public TextAsset InitialStateJson;
 
@@ -24,11 +24,6 @@ namespace Unidux.Example.Todo
             get { return Store.Subject; }
         }
 
-        private static IReducer[] Reducers
-        {
-            get { return new IReducer[] {new TodoDuck.Reducer(), new TodoVisibilityDuck.Reducer()}; }
-        }
-
         private static State InitialState
         {
             get
@@ -41,12 +36,25 @@ namespace Unidux.Example.Todo
 
         public static Store<State> Store
         {
-            get { return Instance._store = Instance._store ?? new Store<State>(InitialState, Reducers); }
+            get
+            {
+                return Instance._store =
+                    Instance._store ?? new Store<State>(InitialState, new MiddlewareDuck.Reducer());
+            }
         }
 
         public static object Dispatch<TAction>(TAction action)
         {
             return Store.Dispatch(action);
+        }
+
+        void Start()
+        {
+            Store.ApplyMiddlewares(
+                Middlewares.Thunk,
+                Middlewares.Logger,
+                Middlewares.CrashReport
+            );
         }
 
         void Update()
