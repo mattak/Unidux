@@ -98,7 +98,7 @@ public static class Count
     {
         public ActionType ActionType;
     }
-    
+
     // ActionCreators creates actions and deliver payloads
     // in redux, you do not dispatch from the ActionCreator to allow for easy testability
     public static class ActionCreator
@@ -230,6 +230,11 @@ Get the state as passed to the constructor.
 
 Dispatch an event of `TAction` object,
 which will trigger a `Reducer<TAction>`.
+
+### `<Store>.ApplyMiddlewares(params Middleware[] middlewares)`
+
+Apply middlewares to Store object
+which implement delegate function of [Middleware](Assets/Plugins/Unidux/Scripts/IMiddleware.cs#L5).
 
 ### `<Store>.Update()`
 
