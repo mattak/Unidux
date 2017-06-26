@@ -18,49 +18,50 @@ Import unitypackage from [latest releases](https://github.com/mattak/Unidux/rele
 using UniRx;
 using Unidux;
 
-public sealed partial class Unidux : SingletonMonoBehaviour<Unidux>
+public sealed class Unidux : SingletonMonoBehaviour<Unidux>, IStoreAccessor
 {
-    partial void AddReducers(Store<State> store);
+    public TextAsset InitialStateJson;
 
-    private ReplaySubject<State> _subject;
     private Store<State> _store;
-    private State _state;
+
+    public IStoreObject StoreObject
+    {
+        get { return Store; }
+    }
 
     public static State State
     {
-        get { return Instance._state = Instance._state ?? new State(); }
+        get { return Store.State; }
     }
 
-    public static ReplaySubject<State> Subject
+    public static Subject<State> Subject
     {
-        get { return Instance._subject = Instance._subject ?? new ReplaySubject<State>(); }
+        get { return Store.Subject; }
+    }
+
+    private static State InitialState
+    {
+        get
+        {
+            return Instance.InitialStateJson != null
+                ? JsonUtility.FromJson<State>(Instance.InitialStateJson.text)
+                : new State();
+        }
     }
 
     public static Store<State> Store
     {
-        get
-        {
-            if (Instance._store == null)
-            {
-                Instance._store = new Store<State>(State);
-                Instance._store.AddRenderer(state => Subject.OnNext(state));
-                Instance.AddReducers(Instance._store);
-            }
-            return Instance._store;
-        }
+        get { return Instance._store = Instance._store ?? new Store<State>(InitialState, new Count.Reducer()); }
+    }
+
+    public static object Dispatch<TAction>(TAction action)
+    {
+        return Store.Dispatch(action);
     }
 
     void Update()
     {
         Store.Update();
-    }
-}
-
-public sealed partial class Unidux
-{
-    partial void AddReducers(Store<State> store)
-    {
-        store.AddReducer<Count.ActionType>(Count.Reducer);
     }
 }
 ```
@@ -71,10 +72,12 @@ provided by [UniRx](https://github.com/neuecc/UniRx) in this example._
 2) Create state class to store application state.
 
 ```csharp
-using Unidux;
-public class State : StateBase<State>
+using System;
+
+[Serializable]
+public class State : StateBase
 {
-    public int Count { get; set; }
+    public int Count = 0;
 }
 ```
 
@@ -83,34 +86,28 @@ public class State : StateBase<State>
 ```csharp
 public static class Count
 {
+    // specify the possible types of actions
     public enum ActionType
     {
         Increment,
         Decrement
     }
 
+    // actions must have a type and may include a payload
     public class Action
     {
         public ActionType ActionType;
     }
-
-    public static State Reducer(State state, ActionType action)
-    {
-        switch (action)
-        {
-            case ActionType.Increment:
-                state.Count++;
-                break;
-            case ActionType.Decrement:
-                state.Count--;
-                break;
-        }
-
-        return state;
-    }
-
+    
+    // ActionCreators creates actions and deliver payloads
+    // in redux, you do not dispatch from the ActionCreator to allow for easy testability
     public static class ActionCreator
     {
+        public static Action Create(ActionType type)
+        {
+            return new Action() {ActionType = type};
+        }
+
         public static Action Increment()
         {
             return new Action() {ActionType = ActionType.Increment};
@@ -119,6 +116,25 @@ public static class Count
         public static Action Decrement()
         {
             return new Action() {ActionType = ActionType.Decrement};
+        }
+    }
+
+    // reducers handle state changes
+    public class Reducer : ReducerBase<State, Action>
+    {
+        public override State Reduce(State state, Action action)
+        {
+            switch (action.ActionType)
+            {
+                case ActionType.Increment:
+                    state.Count++;
+                    break;
+                case ActionType.Decrement:
+                    state.Count--;
+                    break;
+            }
+
+            return state;
         }
     }
 }
@@ -171,20 +187,21 @@ That's it!
 - [Counter](Assets/Plugins/Unidux/Examples/Counter)
 - [List](Assets/Plugins/Unidux/Examples/List)
 - [Todo](Assets/Plugins/Unidux/Examples/Todo)
+- [Middlewares](Assets/Plugins/Unidux/Examples/Middlewares)
 
 # Dependencies
 
 - [UniRx](https://github.com/neuecc/UniRx)
-- [MiniJSON](https://gist.github.com/darktable/1411710) is used on Unidux.Experimental.Editor.StateJsonEditor
+- [MiniJSON](https://gist.github.com/darktable/1411710) (for Unidux.Experimental.Editor.StateJsonEditor)
 
 # API
 
 ## `StateBase`
 
 ```csharp
-public class State : StateBase<State>
+public class State : StateBase
 {
-    public int Count { get; set; }
+    public int Count;
 }
 ```
 
@@ -200,7 +217,8 @@ Create a deep clone of the current state. Useful for Immutability.
 ## `Store`
 
 ```csharp
-Store _store = new Store<State>(State);
+IReducer[] reducers = new IReducer[]{};
+Store _store = new Store<State>(State, reducers);
 // State must extend StateBase
 ```
 
@@ -208,39 +226,9 @@ Store _store = new Store<State>(State);
 
 Get the state as passed to the constructor.
 
-### `<Store>.AddReducer<TAction>(<TReducer>)`
+### `<Store>.Dispatch(object)`
 
-Add a Reducer which handles events of type `TAction`.
-Only one reducer per type is allowed.
-
-Where `TReducer` is a method which conforms to
-[`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
-
-### `<Store>.RemoveReducer<TAction>(<TReducer>)`
-
-Remove a previously added reducer from the store.
-
-Where `TReducer` is a method which conforms to
-[`Reducer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IReducer.cs).
-
-### `<Store>.AddRenderer(<TRenderer>)`
-
-Add a Renderer to the store.
-Multiple renderers can be added based on uniqueness of `.GetHashCode()`
-
-Where `TRenderer` is a method which conforms to
-[`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
-
-### `<Store>.RemoveRenderer(<TRenderer>)`
-
-Remove a previously added renderer from the store.
-
-Where `TRenderer` is a method which conforms to
-[`Renderer`](https://github.com/mattak/Unidux/blob/master/Assets/Plugins/Unidux/Scripts/IRenderer.cs).
-
-### `<Store>.Dispatch<TAction>(<TAction>)`
-
-Dispatch an event of type `TAction`,
+Dispatch an event of `TAction` object,
 which will trigger a `Reducer<TAction>`.
 
 ### `<Store>.Update()`
