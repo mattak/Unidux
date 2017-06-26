@@ -31,3 +31,8 @@ sysinfo.txt
 
 # rider
 .idea.Unidux/
+
+Assets/state.json
+Assets/state.json.meta
+Assets/Plugins/Editor/
+Assets/Plugins/Editor.meta
