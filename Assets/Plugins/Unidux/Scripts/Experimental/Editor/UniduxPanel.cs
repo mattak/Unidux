@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Unidux.Util;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Unidux.Experimental.Editor
             window.Show();
         }
 
+        private ISerializeFactory Serializer = UniduxSetting.Serializer;
         private GameObject _storeObject = null;
         private IStoreAccessor _store = null;
         private int _toolBarPosition = 0;
@@ -126,15 +128,15 @@ namespace Unidux.Experimental.Editor
 
             if (existsJson && GUILayout.Button("Save"))
             {
-                var json = JsonUtility.ToJson(this._store.StoreObject.ObjectState);
-                File.WriteAllText(jsonPath, json);
+                var json = this.Serializer.Serialize(this._store.StoreObject.ObjectState);
+                File.WriteAllBytes(jsonPath, json);
                 AssetDatabase.Refresh();
             }
 
             if (existsJson && GUILayout.Button("Load"))
             {
-                var content = File.ReadAllText(jsonPath);
-                this._store.StoreObject.ObjectState = JsonUtility.FromJson(content, this._store.StoreObject.StateType);
+                var content = File.ReadAllBytes(jsonPath);
+                this._store.StoreObject.ObjectState = this.Serializer.Deserialize(content, this._store.StoreObject.StateType);
             }
             EditorGUILayout.EndHorizontal();
         }
