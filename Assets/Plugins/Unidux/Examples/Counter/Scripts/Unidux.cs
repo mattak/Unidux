@@ -29,7 +29,10 @@ namespace Unidux.Example.Counter
             get
             {
                 return Instance.InitialStateJson != null
-                    ? JsonUtility.FromJson<State>(Instance.InitialStateJson.text)
+                    ? UniduxSetting.Serializer.Deserialize(
+                        System.Text.Encoding.UTF8.GetBytes(Instance.InitialStateJson.text),
+                        typeof(State)
+                    ) as State
                     : new State();
             }
         }
