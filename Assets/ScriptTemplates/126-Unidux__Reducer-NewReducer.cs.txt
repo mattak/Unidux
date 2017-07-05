@@ -1,0 +1,13 @@
+﻿using System;
+using Unidux;
+
+namespace App
+{
+    public class #SCRIPTNAME# : ReducerBase<State, Action>
+    {
+        public override State Reduce(State state, Action action)
+        {
+            return state;
+        }
+    }
+}
