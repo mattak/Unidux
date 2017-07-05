@@ -1,0 +1,16 @@
+﻿using System;
+using Unidux;
+
+namespace App
+{
+    public static class #SCRIPTNAME#
+    {
+        public static System.Func<System.Func<object, object>, System.Func<object, object>> Process(IStoreObject store)
+        {
+            return (System.Func<object, object> next) => (object action) =>
+            {
+                return next(action);
+            };
+        }
+    }
+}
