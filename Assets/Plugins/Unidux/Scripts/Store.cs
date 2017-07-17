@@ -54,7 +54,7 @@ namespace Unidux
         public void ApplyMiddlewares(params Middleware[] middlewares)
         {
             this._dispatcher = (object _action) => { return this._Dispatch(_action); };
-            
+
             foreach (var middleware in middlewares.Reverse())
             {
                 this._dispatcher = middleware(this)(this._dispatcher);
@@ -122,9 +122,27 @@ namespace Unidux
         private bool UpdateStateChanged(TState oldState, TState newState)
         {
             bool stateChanged = false;
-            bool hasNoStateChangedFields = true;
-            var fields = newState.GetType().GetFields();
+            bool someStateChanged = true;
 
+            var properties = newState.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var newValue = property.GetValue(newState, null);
+                var oldValue = property.GetValue(oldState, null);
+
+                if (newValue != null && newValue is IStateChanged)
+                {
+                    someStateChanged = false;
+
+                    if (!newValue.Equals(oldValue))
+                    {
+                        ((IStateChanged) newValue).SetStateChanged();
+                        stateChanged = true;
+                    }
+                }
+            }
+            
+            var fields = newState.GetType().GetFields();
             foreach (var field in fields)
             {
                 var newValue = field.GetValue(newState);
@@ -132,7 +150,7 @@ namespace Unidux
 
                 if (newValue != null && newValue is IStateChanged)
                 {
-                    hasNoStateChangedFields = false;
+                    someStateChanged = false;
 
                     if (!newValue.Equals(oldValue))
                     {
@@ -143,21 +161,32 @@ namespace Unidux
             }
 
             // if there is no IStateChanged field, it should be marked as state changed to activate Update function.
-            stateChanged |= hasNoStateChangedFields;
+            stateChanged |= someStateChanged;
 
             return stateChanged;
         }
 
         private void ResetStateChanged(TState state)
         {
-            var members = state.GetType().GetProperties();
-            foreach (var member in members)
+            var properties = state.GetType().GetProperties();
+            foreach (var property in properties)
             {
-                var property = member.GetValue(state, null);
-                if (property is IStateChanged)
+                var value = property.GetValue(state, null);
+                if (value is IStateChanged)
                 {
-                    var changedProperty = (IStateChanged) property;
-                    changedProperty.SetStateChanged(false);
+                    var changedValue = (IStateChanged) value;
+                    changedValue.SetStateChanged(false);
+                }
+            }
+
+            var fields = state.GetType().GetFields();
+            foreach (var field in fields)
+            {
+                var value = field.GetValue(state);
+                if (value is IStateChanged)
+                {
+                    var changedValue = (IStateChanged) value;
+                    changedValue.SetStateChanged(false);
                 }
             }
         }

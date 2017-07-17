@@ -47,14 +47,46 @@ namespace Unidux
             store.Subject.Subscribe(state =>
             {
                 count++;
-                Assert.IsTrue(state.Changed.IsStateChanged);
+                Assert.IsTrue(state.ChangedProperty.IsStateChanged);
+                Assert.IsTrue(state.ChangedField.IsStateChanged);
             });
 
-            Assert.IsFalse(store.State.Changed.IsStateChanged);
-            store.State.Changed.SetStateChanged();
+            Assert.IsFalse(store.State.ChangedProperty.IsStateChanged);
+            Assert.IsFalse(store.State.ChangedField.IsStateChanged);
+            store.State.ChangedProperty.SetStateChanged();
+            store.State.ChangedField.SetStateChanged();
 
             store.ForceUpdate();
-            Assert.IsFalse(store.State.Changed.IsStateChanged);
+            Assert.IsFalse(store.State.ChangedProperty.IsStateChanged);
+            Assert.IsFalse(store.State.ChangedField.IsStateChanged);
+            Assert.AreEqual(1, count);
+        }
+
+        [Test]
+        public void StateSetTest()
+        {
+            var store = new Store<State>(new State());
+            var count = 0;
+            var newState = new State();
+            
+            store.Subject.Subscribe(state =>
+            {
+                count++;
+                Assert.IsTrue(state.ChangedProperty.IsStateChanged);
+                Assert.IsTrue(state.ChangedField.IsStateChanged);
+            });
+            
+            Assert.IsFalse(store.State.ChangedProperty.IsStateChanged);
+            Assert.IsFalse(store.State.ChangedField.IsStateChanged);
+            
+            newState.ChangedField.SetStateChanged();
+            newState.ChangedProperty.SetStateChanged();
+
+            store.State = newState;
+            
+            store.ForceUpdate();
+            Assert.IsFalse(store.State.ChangedProperty.IsStateChanged);
+            Assert.IsFalse(store.State.ChangedField.IsStateChanged);
             Assert.AreEqual(1, count);
         }
 
@@ -107,15 +139,16 @@ namespace Unidux
             Assert.AreEqual(4, positions.Count);
             Assert.AreEqual(new[] {1, 3, 4, 2}, positions.ToArray());
         }
-
+        
         [Serializable]
         class State : StateBase
         {
-            public ChangedState Changed { get; set; }
+            public ChangedState ChangedProperty { get; set; }
+            public ChangedState ChangedField = new ChangedState();
 
             public State()
             {
-                this.Changed = new ChangedState();
+                this.ChangedProperty = new ChangedState();
             }
         }
 
