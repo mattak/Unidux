@@ -1,9 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 namespace Unidux
 {
     public class StateCloneTest
     {
-        class Hoge : IStateClone
+        class Hoge : ICloneable
         {
             private bool Flag = false;
 
@@ -17,9 +18,9 @@ namespace Unidux
                 return this.Flag;
             }
 
-            public T Clone<T>() where T : IStateClone
+            public object Clone()
             {
-                return (T) MemberwiseClone();
+                return MemberwiseClone();
             }
         }
 
@@ -47,7 +48,7 @@ namespace Unidux
             Assert.AreEqual(true, hoge1.GetFlag());
             Assert.AreEqual(100, hoge1.GetCount());
 
-            var hoge2 = hoge1.Clone<HogeHoge>();
+            var hoge2 = (HogeHoge)hoge1.Clone();
             Assert.AreEqual(true, hoge2.GetFlag());
             Assert.AreEqual(100, hoge2.GetCount());
         }

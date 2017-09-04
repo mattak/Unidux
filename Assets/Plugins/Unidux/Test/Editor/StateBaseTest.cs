@@ -12,7 +12,7 @@ namespace Unidux
             var sample1 = new SampleState();
             sample1.List = new List<string>() {"a", "b", "c"};
 
-            var sample2 = sample1.Clone<SampleState>();
+            var sample2 = (SampleState)sample1.Clone();
             sample2.List[1] = "bb";
             Assert.AreEqual(new List<string>() {"a", "b", "c"}, sample1.List);
             Assert.AreEqual(new List<string>() {"a", "bb", "c"}, sample2.List);

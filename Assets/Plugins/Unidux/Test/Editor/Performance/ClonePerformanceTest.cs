@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
 
-namespace Unidux.Test
+namespace Unidux.Performance
 {
     public class ClonePerformanceTest
     {
@@ -23,7 +23,7 @@ namespace Unidux.Test
             {
                 watch.Reset();
                 watch.Start();
-                var clone1 = state.Clone<SampleState>();
+                var clone1 = (SampleState)state.Clone();
                 watch.Stop();
                 UnityEngine.Debug.Log("Clone1: " + watch.Elapsed.Milliseconds + "[ms]");
             }
@@ -48,10 +48,10 @@ namespace Unidux.Test
                 return state;
             }
 
-//            public override TValue Clone<TValue>()
+            // custom implementation of Clone is faster than default BinaryFormatter implementation.
+//            public override object Clone()
 //            {
-//                object clonee = CustomClone();
-//                return (TValue)clonee;
+//                return CustomClone();
 //            }
 
             public SampleState CustomClone()

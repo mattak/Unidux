@@ -265,6 +265,27 @@ Foo.Instance
 
 The instance of the base class.
 
+# TIPS
+
+## Performance of object cloning
+
+Default implemention of `StateBase.Clone()` is not fast, because it uses `BinaryFormatter` & `MemoryStream`.
+And Unidux creates new State on every State chaning (it affects a few milliseconds).
+So in case of requiring performance, override clone method with your own logic.
+
+e.g.
+
+```
+[Serializable]
+class State : StateBase
+{
+    public override object Clone()
+    {
+        // implement your custom deep clone code
+    }
+}
+```
+
 # Thanks
 
 - [@austinmao](https://github.com/austinmao) for suggestion of Ducks and UniRx.
