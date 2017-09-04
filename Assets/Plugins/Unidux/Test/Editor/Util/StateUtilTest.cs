@@ -9,10 +9,12 @@ namespace Unidux.Util
         public void MemoryCloneTest()
         {
             var sample1 = new SampleEntity();
+            sample1.SetStateChanged();
             var sample2 = StateUtil.MemoryClone(sample1) as SampleEntity;
 
             Assert.AreEqual(sample1.Id, sample2.Id);
             Assert.AreEqual(sample1.Name, sample2.Name);
+            Assert.AreEqual(sample1.IsStateChanged, sample2.IsStateChanged);
 
             sample2.Id = sample1.Id + 1;
             sample2.Name = "John";

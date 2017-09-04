@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Unidux.Util;
 using UniRx;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace Unidux
             get { return this._state; }
             set
             {
-                this._changed = this.UpdateStateChanged(this._state, value);
+                this._changed = StateUtil.ApplyStateChanged(this._state, value);
                 this._state = value;
             }
         }
@@ -103,7 +104,7 @@ namespace Unidux
                 fixedState = this._state.Clone<TState>();
 
                 // The function may slow
-                ResetStateChanged(this._state);
+                StateUtil.ResetStateChanged(this._state);
             }
 
             this.Subject.OnNext(fixedState);
@@ -117,78 +118,6 @@ namespace Unidux
             }
 
             this.ForceUpdate();
-        }
-
-        private bool UpdateStateChanged(TState oldState, TState newState)
-        {
-            bool stateChanged = false;
-            bool someStateChanged = true;
-
-            var properties = newState.GetType().GetProperties();
-            foreach (var property in properties)
-            {
-                var newValue = property.GetValue(newState, null);
-                var oldValue = property.GetValue(oldState, null);
-
-                if (newValue != null && newValue is IStateChanged)
-                {
-                    someStateChanged = false;
-
-                    if (!newValue.Equals(oldValue))
-                    {
-                        ((IStateChanged) newValue).SetStateChanged();
-                        stateChanged = true;
-                    }
-                }
-            }
-            
-            var fields = newState.GetType().GetFields();
-            foreach (var field in fields)
-            {
-                var newValue = field.GetValue(newState);
-                var oldValue = field.GetValue(oldState);
-
-                if (newValue != null && newValue is IStateChanged)
-                {
-                    someStateChanged = false;
-
-                    if (!newValue.Equals(oldValue))
-                    {
-                        ((IStateChanged) newValue).SetStateChanged();
-                        stateChanged = true;
-                    }
-                }
-            }
-
-            // if there is no IStateChanged field, it should be marked as state changed to activate Update function.
-            stateChanged |= someStateChanged;
-
-            return stateChanged;
-        }
-
-        private void ResetStateChanged(TState state)
-        {
-            var properties = state.GetType().GetProperties();
-            foreach (var property in properties)
-            {
-                var value = property.GetValue(state, null);
-                if (value is IStateChanged)
-                {
-                    var changedValue = (IStateChanged) value;
-                    changedValue.SetStateChanged(false);
-                }
-            }
-
-            var fields = state.GetType().GetFields();
-            foreach (var field in fields)
-            {
-                var value = field.GetValue(state);
-                if (value is IStateChanged)
-                {
-                    var changedValue = (IStateChanged) value;
-                    changedValue.SetStateChanged(false);
-                }
-            }
         }
     }
 }

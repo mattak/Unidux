@@ -1,32 +1,21 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using Unidux.Util;
 
 namespace Unidux
 {
     [Serializable]
-    public class StateBase : IState, IStateClone
+    public class StateBase : IState, IStateClone, IStateChanged
     {
         public virtual TValue Clone<TValue>() where TValue : IStateClone
         {
-            TValue result;
-            BinaryFormatter formatter = new BinaryFormatter();
+            return (TValue) StateUtil.MemoryClone(this);
+        }
 
-            using (MemoryStream stream = new MemoryStream())
-            {
-                try
-                {
-                    formatter.Serialize(stream, this);
-                    stream.Position = 0;
-                    result = (TValue) formatter.Deserialize(stream);
-                }
-                finally
-                {
-                    stream.Close();
-                }
-            }
-
-            return result;
+        public bool IsStateChanged { get; private set; }
+        
+        public void SetStateChanged(bool changed = true)
+        {
+            this.IsStateChanged = changed;
         }
     }
 }
