@@ -101,7 +101,7 @@ namespace Unidux
             lock (this._state)
             {
                 // Prevent writing state object
-                fixedState = this._state.Clone<TState>();
+                fixedState = (TState) this._state.Clone();
 
                 // The function may slow
                 StateUtil.ResetStateChanged(this._state);

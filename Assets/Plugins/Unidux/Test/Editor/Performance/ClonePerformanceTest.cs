@@ -23,7 +23,7 @@ namespace Unidux.Test
             {
                 watch.Reset();
                 watch.Start();
-                var clone1 = state.Clone<SampleState>();
+                var clone1 = (SampleState)state.Clone();
                 watch.Stop();
                 UnityEngine.Debug.Log("Clone1: " + watch.Elapsed.Milliseconds + "[ms]");
             }

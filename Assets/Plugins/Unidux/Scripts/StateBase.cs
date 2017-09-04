@@ -4,11 +4,12 @@ using Unidux.Util;
 namespace Unidux
 {
     [Serializable]
-    public class StateBase : IState, IStateClone, IStateChanged
+    public class StateBase : IState, IStateChanged, ICloneable
     {
-        public virtual TValue Clone<TValue>() where TValue : IStateClone
+        public virtual object Clone()
         {
-            return (TValue) StateUtil.MemoryClone(this);
+            // It's slow. in case of requiring performance override this deep clone method by your code.
+            return StateUtil.MemoryClone(this);
         }
 
         public bool IsStateChanged { get; private set; }
