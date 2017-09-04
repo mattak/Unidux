@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Unidux.Util;
+﻿using Unidux.Util;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,9 +17,9 @@ namespace Unidux.Experimental.Editor
         private GameObject _storeObject = null;
         private IStoreAccessor _store = null;
         private int _toolBarPosition = 0;
-        private const string DefaultStateJsonPath = "Assets/state.json";
         private const string StoreObjectKey = "UniduxPanel.StoreObject";
-        private const string JsonPathKey = "UniduxPanel.JsonSavePath";
+        private UniduxPanelSettingTab _settingTab = new UniduxPanelSettingTab();
+        private UniduxPanelStateTab _stateTab = new UniduxPanelStateTab();
 
         void OnGUI()
         {
@@ -60,85 +59,12 @@ namespace Unidux.Experimental.Editor
             switch (this._toolBarPosition)
             {
                 case 0:
-                    this.RenderSettingContent();
+                    this._settingTab.Render(this._store, this.Serializer);
                     break;
                 case 1:
-                    this.RenderStateContent();
+                    this._stateTab.Render(this._store);
                     break;
             }
-        }
-
-        private void RenderStateContent()
-        {
-            if (this._store != null)
-            {
-                EditorGUILayout.LabelField("TODO: implement");
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("Please Set IStoreAccessor", MessageType.Warning);
-            }
-        }
-
-        private void RenderSettingContent()
-        {
-            if (this._store == null)
-            {
-                EditorGUILayout.HelpBox("Please Set IStoreAccessor", MessageType.Warning);
-                return;
-            }
-
-            var title = "State Json:";
-            var jsonPath = EditorPrefs.GetString(JsonPathKey, DefaultStateJsonPath);
-            var existsJson = File.Exists(jsonPath);
-
-            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-            if (existsJson)
-            {
-                if (GUILayout.Button(jsonPath, EditorStyles.label))
-                {
-                    var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(jsonPath);
-                    Selection.activeObject = asset;
-                }
-            }
-            else
-            {
-                EditorGUILayout.HelpBox("Create or Select json to save/load", MessageType.Warning);
-            }
-
-            EditorGUILayout.BeginHorizontal();
-            if (!existsJson && GUILayout.Button("Create"))
-            {
-                jsonPath = EditorUtility.SaveFilePanel("Create empty json", "Assets", "state.json", "json");
-                jsonPath = ReplaceJsonPath(jsonPath);
-                if (!string.IsNullOrEmpty(jsonPath))
-                {
-                    File.WriteAllText(jsonPath, "{}");
-                    AssetDatabase.Refresh();
-                    RecordJsonPath(jsonPath);
-                }
-            }
-
-            if (GUILayout.Button("Select"))
-            {
-                jsonPath = EditorUtility.OpenFilePanel("Select json to save", "", "json");
-                jsonPath = ReplaceJsonPath(jsonPath);
-                RecordJsonPath(jsonPath);
-            }
-
-            if (existsJson && GUILayout.Button("Save"))
-            {
-                var json = this.Serializer.Serialize(this._store.StoreObject.ObjectState);
-                File.WriteAllBytes(jsonPath, json);
-                AssetDatabase.Refresh();
-            }
-
-            if (existsJson && GUILayout.Button("Load"))
-            {
-                var content = File.ReadAllBytes(jsonPath);
-                this._store.StoreObject.ObjectState = this.Serializer.Deserialize(content, this._store.StoreObject.StateType);
-            }
-            EditorGUILayout.EndHorizontal();
         }
 
         private void ResetObject(string key)
@@ -165,17 +91,6 @@ namespace Unidux.Experimental.Editor
                 return EditorUtility.InstanceIDToObject(id) as GameObject;
             }
             return null;
-        }
-
-        private string ReplaceJsonPath(string path)
-        {
-            var projectPath = Application.dataPath.Replace("Assets", "");
-            return path.Replace(projectPath, "");
-        }
-
-        private void RecordJsonPath(string path)
-        {
-            EditorPrefs.SetString(JsonPathKey, path);
         }
     }
 }

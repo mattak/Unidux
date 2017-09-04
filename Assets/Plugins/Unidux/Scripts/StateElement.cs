@@ -5,16 +5,11 @@ namespace Unidux
     [Serializable]
     public class StateElement : IState, IStateChanged
     {
-        private bool _stateChanged = false;
-
-        public bool IsStateChanged
-        {
-            get { return this._stateChanged; }
-        }
+        public bool IsStateChanged { get; private set; }
 
         public void SetStateChanged(bool changed = true)
         {
-            this._stateChanged = changed;
+            this.IsStateChanged = changed;
         }
     }
 }
