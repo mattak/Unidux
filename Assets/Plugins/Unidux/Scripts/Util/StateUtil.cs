@@ -13,7 +13,7 @@ namespace Unidux.Util
             {
                 return oldState != null || newState != null;
             }
-            
+
             bool stateChanged = false;
 
             var properties = newState.GetType().GetProperties();
@@ -37,7 +37,7 @@ namespace Unidux.Util
             {
                 var newValue = field.GetValue(newState);
                 var oldValue = field.GetValue(oldState);
-                
+
                 if (newValue is IStateChanged)
                 {
                     stateChanged |= ApplyStateChanged((IStateChanged) oldValue, (IStateChanged) newValue);
@@ -62,12 +62,12 @@ namespace Unidux.Util
             {
                 state.SetStateChanged(false);
             }
-            
+
             var properties = state.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var value = property.GetValue(state, null);
-                
+
                 if (value != null && value is IStateChanged)
                 {
                     var changedValue = (IStateChanged) value;
@@ -89,21 +89,14 @@ namespace Unidux.Util
 
         public static object MemoryClone(object clonee)
         {
+            return MemoryClone(clonee, CreateDefaultSurrogateSelector());
+        }
+
+        public static object MemoryClone(object clonee, SurrogateSelector selector)
+        {
             object result;
             IFormatter formatter = new BinaryFormatter();
-
-            {
-                SurrogateSelector selector = new SurrogateSelector();
-                selector.AddSurrogate(typeof(Vector2), new StreamingContext(StreamingContextStates.All),
-                    new Vector2SerializationSurrogate());
-                selector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
-                    new Vector3SerializationSurrogate());
-                selector.AddSurrogate(typeof(Vector4), new StreamingContext(StreamingContextStates.All),
-                    new Vector4SerializationSurrogate());
-                selector.AddSurrogate(typeof(Color), new StreamingContext(StreamingContextStates.All),
-                    new ColorSerializationSurrogate());
-                formatter.SurrogateSelector = selector;
-            }
+            formatter.SurrogateSelector = selector;
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -120,6 +113,20 @@ namespace Unidux.Util
             }
 
             return result;
+        }
+
+        public static SurrogateSelector CreateDefaultSurrogateSelector()
+        {
+            SurrogateSelector selector = new SurrogateSelector();
+            selector.AddSurrogate(typeof(Vector2), new StreamingContext(StreamingContextStates.All),
+                new Vector2SerializationSurrogate());
+            selector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All),
+                new Vector3SerializationSurrogate());
+            selector.AddSurrogate(typeof(Vector4), new StreamingContext(StreamingContextStates.All),
+                new Vector4SerializationSurrogate());
+            selector.AddSurrogate(typeof(Color), new StreamingContext(StreamingContextStates.All),
+                new ColorSerializationSurrogate());
+            return selector;
         }
     }
 }
