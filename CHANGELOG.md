@@ -1,3 +1,19 @@
+# 2017-09-06 v0.3.1
+
+Breaking Changes
+- Delete IStateClone https://github.com/mattak/Unidux/issues/97
+
+Features
+- Create template for Unidux component  https://github.com/mattak/Unidux/issues/71
+- Separate dependency of JsonUtility  https://github.com/mattak/Unidux/issues/88
+- Editor extension to watch State object https://github.com/mattak/Unidux/issues/5
+
+Bug Fixes
+- Fix bug: Detecting field change https://github.com/mattak/Unidux/issues/91
+
+Etc
+- Update Unity version to 2017.1  https://github.com/mattak/Unidux/issues/98
+
 # 2017-06-27 v0.3.0
 
 Breaking Changes
