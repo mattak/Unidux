@@ -188,6 +188,7 @@ That's it!
 - [List](Assets/Plugins/Unidux/Examples/List)
 - [Todo](Assets/Plugins/Unidux/Examples/Todo)
 - [Middlewares](Assets/Plugins/Unidux/Examples/Middlewares)
+- [SimpleHttp](Assets/Plugins/Unidux/Examples/SimpleHttp)
 
 # Dependencies
 
