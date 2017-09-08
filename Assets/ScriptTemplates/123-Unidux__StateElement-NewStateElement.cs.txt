@@ -4,6 +4,7 @@ using Unidux;
 namespace App
 {
     [Serializable]
-    public class #SCRIPTNAME# : StateElement {
+    public class #SCRIPTNAME# : StateElement
+    {
     }
 }
