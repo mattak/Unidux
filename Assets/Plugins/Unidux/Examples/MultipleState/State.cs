@@ -63,6 +63,11 @@ namespace Unidux.Example.MultipleState
 
             return equal;
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     [Serializable]
@@ -86,6 +91,11 @@ namespace Unidux.Example.MultipleState
         {
             return new StringBuilder().Append("Id:").Append(Id).Append(", Name:").Append(Name).ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     [Serializable]
@@ -94,6 +104,11 @@ namespace Unidux.Example.MultipleState
         public override bool Equals(object obj)
         {
             return obj != null;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }
