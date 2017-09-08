@@ -16,14 +16,14 @@ namespace Unidux.Performance
             {
                 watch.Reset();
                 watch.Start();
-                var clone2 = state.CustomClone();
+                state.CustomClone();
                 watch.Stop();
                 UnityEngine.Debug.Log("Clone2: " + watch.Elapsed.Milliseconds + "[ms]");
             }
             {
                 watch.Reset();
                 watch.Start();
-                var clone1 = (SampleState)state.Clone();
+                state.Clone();
                 watch.Stop();
                 UnityEngine.Debug.Log("Clone1: " + watch.Elapsed.Milliseconds + "[ms]");
             }
