@@ -1,52 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using NUnit.Framework;
+using Unidux.Util;
 
 namespace Unidux.Performance
 {
-    public class ClonePerformanceTest
+    public class EqualsPerformanceTest
     {
         [Test]
-        public void CloneTest()
+        public void EqualsTest()
         {
-            var loopCount = 100;
-            var state = SampleState.Create(loopCount);
+            var loopCount = 1000;
+            var state1 = SampleState.Create(loopCount);
+            var state2 = SampleState.Create(loopCount);
             var watch = new Stopwatch();
 
-            var timeOfCustomClone = 0;
-            var timeOfAutoClone = 0;
+            var timeOfEquality = 0;
+            var timeOfCustomEquals = 0;
 
             {
                 watch.Reset();
                 watch.Start();
-                state.CustomClone();
+                Assert.IsTrue(state1.Equals(state2));
                 watch.Stop();
-                timeOfCustomClone = watch.Elapsed.Milliseconds;
+                timeOfEquality = watch.Elapsed.Milliseconds;
             }
             {
                 watch.Reset();
                 watch.Start();
-                state.Clone();
+                Assert.IsTrue(state1.CustomEquals(state2));
                 watch.Stop();
-                timeOfAutoClone = watch.Elapsed.Milliseconds;
+                timeOfCustomEquals = watch.Elapsed.Milliseconds;
             }
 
-            // dummy check
-            Assert.IsTrue(true);
-
-            var gain = 100 * (double) timeOfCustomClone / timeOfAutoClone;
+            var gain = 100 * (double) timeOfCustomEquals / timeOfEquality;
 
             UnityEngine.Debug.Log(string.Format(
-                "[Perf] loop: {0}, CustomClone: {1}[ms], AutClone: {2}[ms], gain {3}%",
+                "[Perf] loops: {0}, CustomEquals: {1}[ms], AutoEquals: {2}[ms], gain {3}%",
                 loopCount,
-                timeOfCustomClone,
-                timeOfAutoClone,
+                timeOfCustomEquals,
+                timeOfEquality,
                 gain.ToString("F2")
             ));
         }
 
-        [Serializable]
         class SampleState : StateBase
         {
             public List<SampleEntity> List = new List<SampleEntity>();
@@ -63,26 +61,32 @@ namespace Unidux.Performance
                 return state;
             }
 
-            // custom implementation of Clone is faster than default BinaryFormatter implementation.
-//            public override object Clone()
-//            {
-//                return CustomClone();
-//            }
-
-            public SampleState CustomClone()
+            public bool CustomEquals(object targetObject)
             {
-                var state = new SampleState();
+                var target = (SampleState) targetObject;
 
-                foreach (var entity in state.List)
+                return CustomListEquqls(target.List);
+            }
+
+            private bool CustomListEquqls(List<SampleEntity> targets)
+            {
+                if (this.List.Count != targets.Count)
                 {
-                    state.List.Add(entity.CustomClone());
+                    return false;
                 }
 
-                return state;
+                for (var i = 0; i < this.List.Count; i++)
+                {
+                    if (!this.List[i].CustomEquals(targets[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         }
 
-        [Serializable]
         class SampleEntity : StateElement
         {
             public int IntValue = 0;
@@ -115,26 +119,19 @@ namespace Unidux.Performance
                 return entity;
             }
 
-            public SampleEntity CustomClone()
+            public bool CustomEquals(object targetObject)
             {
-                var entity = new SampleEntity();
-                entity.IntValue = this.IntValue;
-                entity.LongValue = this.LongValue;
-                entity.FloatValue = this.FloatValue;
-                entity.DoubleValue = this.DoubleValue;
-                entity.StringValue = this.StringValue;
+                var target = (SampleEntity) targetObject;
 
-                foreach (var value in this.StringListValue)
-                {
-                    entity.StringListValue.Add(value);
-                }
-
-                foreach (var entry in this.DictionaryStringValue)
-                {
-                    entity.DictionaryStringValue[entry.Key] = entry.Value;
-                }
-
-                return entity;
+                return
+                    this.IntValue.Equals(target.IntValue) &&
+                    this.LongValue.Equals(target.LongValue) &&
+                    this.FloatValue.Equals(target.FloatValue) &&
+                    this.DoubleValue.Equals(target.DoubleValue) &&
+                    this.StringValue.Equals(target.StringValue) &&
+                    this.StringListValue.SequenceEqual(target.StringListValue) &&
+                    this.DictionaryStringValue.SequenceEqual(target.DictionaryStringValue)
+                    ;
             }
         }
     }
