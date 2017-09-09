@@ -132,10 +132,8 @@ namespace Unidux.Experimental.Editor
             else if (type.IsEnum)
             {
                 string[] _choices = Enum.GetNames(type);
-                var foldingKey = this.GetFoldingKey(rootNames);
-                var oldValue = _choiceIndexMap.GetOrDefault(foldingKey, 0);
+                var oldValue = (int)element;
                 var newValue = EditorGUILayout.Popup(name, oldValue, _choices);
-                _choiceIndexMap[foldingKey] = newValue;
                 dirty |= (oldValue != newValue);
 
                 if (dirty) setter(newValue);
