@@ -33,6 +33,7 @@ namespace Unidux.Example.Todo
                 {
                     case ActionType.SET_VISIBILITY:
                         state.Todo = SetVisibility(state.Todo, action.Filter);
+                        state.SetStateChanged();
                         return state;
                 }
 
