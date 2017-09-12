@@ -13,7 +13,6 @@ namespace Unidux.Experimental.Editor
     public class UniduxPanelStateTab
     {
         private Vector2 _scrollPosition = Vector2.zero;
-        private Dictionary<string, int> _choiceIndexMap = new Dictionary<string, int>();
         private Dictionary<string, bool> _foldingMap = new Dictionary<string, bool>();
         private object _newState = null;
         private ISubject<object> _stateSubject;
@@ -35,7 +34,7 @@ namespace Unidux.Experimental.Editor
 
                 if (!state.Equals(this._newState))
                 {
-                    this._newState = StateUtil.MemoryClone(state);
+                    this._newState = CloneUtil.MemoryClone(state);
                 }
 
                 var dirty = this.RenderObject(names, state.GetType().Name, type, this._newState, _ => { });

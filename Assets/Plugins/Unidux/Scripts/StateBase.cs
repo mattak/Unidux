@@ -16,7 +16,7 @@ namespace Unidux
         public virtual object Clone()
         {
             // It's slow. So in case of requiring performance, override this deep clone method by your code.
-            return StateUtil.MemoryClone(this);
+            return CloneUtil.MemoryClone(this);
         }
 
         public override bool Equals(object obj)

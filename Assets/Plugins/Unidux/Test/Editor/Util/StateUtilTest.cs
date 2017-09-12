@@ -6,24 +6,6 @@ namespace Unidux.Util
     public class StateUtilTest
     {
         [Test]
-        public void MemoryCloneTest()
-        {
-            var sample1 = new SampleEntity();
-            sample1.SetStateChanged();
-            var sample2 = StateUtil.MemoryClone(sample1) as SampleEntity;
-
-            Assert.AreEqual(sample1.Id, sample2.Id);
-            Assert.AreEqual(sample1.Name, sample2.Name);
-            Assert.AreEqual(sample1.IsStateChanged, sample2.IsStateChanged);
-
-            sample2.Id = sample1.Id + 1;
-            sample2.Name = "John";
-
-            Assert.AreNotEqual(sample1.Id, sample2.Id);
-            Assert.AreNotEqual(sample1.Name, sample2.Name);
-        }
-
-        [Test]
         public void ApplyStateChangedTest()
         {
             {
@@ -56,14 +38,14 @@ namespace Unidux.Util
                 Assert.IsFalse(StateUtil.ApplyStateChanged(root1, root2));
                 Assert.IsFalse(root1.IsStateChanged);
                 Assert.IsFalse(root2.IsStateChanged);
-                
+
                 root2.Sample = new SampleEntity();
                 Assert.IsTrue(StateUtil.ApplyStateChanged(root1, root2));
                 Assert.IsFalse(root1.IsStateChanged);
                 Assert.IsTrue(root2.IsStateChanged);
-                
+
                 root2.SetStateChanged(false);
-                
+
                 root1.Sample = new SampleEntity();
                 Assert.IsFalse(StateUtil.ApplyStateChanged(root1, root2));
                 Assert.IsFalse(root1.IsStateChanged);
@@ -84,7 +66,7 @@ namespace Unidux.Util
             Assert.IsTrue(sample.IsStateChanged);
             StateUtil.ResetStateChanged(sample);
             Assert.IsFalse(sample.IsStateChanged);
-            
+
             var root = new RootEntity();
             root.SetStateChanged();
             root.Sample = new SampleEntity();
