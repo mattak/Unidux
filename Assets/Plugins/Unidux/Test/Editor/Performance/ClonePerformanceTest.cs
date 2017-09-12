@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using NUnit.Framework;
+using Unidux.Util;
 
 namespace Unidux.Performance
 {
@@ -16,6 +17,7 @@ namespace Unidux.Performance
 
             var timeOfCustomClone = 0;
             var timeOfAutoClone = 0;
+            var timeOfReflectionClone = 0;
 
             {
                 watch.Reset();
@@ -31,19 +33,26 @@ namespace Unidux.Performance
                 watch.Stop();
                 timeOfAutoClone = watch.Elapsed.Milliseconds;
             }
+            {
+                watch.Reset();
+                watch.Start();
+                state.ReflectionClone();
+                watch.Stop();
+                timeOfReflectionClone = watch.Elapsed.Milliseconds;
+            }
 
             // dummy check
             Assert.IsTrue(true);
 
-            var gain = 100 * (double) timeOfCustomClone / timeOfAutoClone;
-
-            UnityEngine.Debug.Log(string.Format(
-                "[Perf] loop: {0}, CustomClone: {1}[ms], AutClone: {2}[ms], gain {3}%",
-                loopCount,
-                timeOfCustomClone,
-                timeOfAutoClone,
-                gain.ToString("F2")
-            ));
+            {
+                UnityEngine.Debug.Log(string.Format(
+                    "[Perf] loop: {0}, CustomClone: {1}[ms], ReflectionClone: {2}[ms], AutClone: {3}[ms]",
+                    loopCount,
+                    timeOfCustomClone,
+                    timeOfReflectionClone,
+                    timeOfAutoClone
+                ));
+            }
         }
 
         [Serializable]
@@ -79,6 +88,11 @@ namespace Unidux.Performance
                 }
 
                 return state;
+            }
+
+            public SampleState ReflectionClone()
+            {
+                return CloneUtil.CopyEntity(this, new SampleState());
             }
         }
 
