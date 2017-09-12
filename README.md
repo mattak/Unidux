@@ -266,9 +266,9 @@ Foo.Instance
 
 The instance of the base class.
 
-# TIPS
+# Performance
 
-## Performance of object cloning
+## `Clone()`
 
 Default implemention of `StateBase.Clone()` is not fast, because it uses `BinaryFormatter` & `MemoryStream`.
 And Unidux creates new State on every State chaning (it affects a few milliseconds).
@@ -276,13 +276,32 @@ So in case of requiring performance, override clone method with your own logic.
 
 e.g.
 
-```
+```csharp
 [Serializable]
 class State : StateBase
 {
     public override object Clone()
     {
         // implement your custom deep clone code
+    }
+}
+```
+
+## `Equals()`
+
+Default implemention of `StateBase.Equals()` and `StateElement.Equals()` is not fast, because it uses fields and properties reflection.
+In case of edit state on UniduxPanel's StateEditor, it calls `Equals()` in order to set `IsStateChanged` flags automatically.
+So in case of requiring performance, override `Equals()` method with your own logic.
+
+e.g.
+
+```csharp
+[Serializable]
+class State : StateBase
+{
+    public override bool Equals(object obj)
+    {
+        // implement your custom equality check code
     }
 }
 ```
