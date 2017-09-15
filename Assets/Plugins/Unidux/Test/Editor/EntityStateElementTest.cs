@@ -55,6 +55,11 @@ namespace Unidux
                 target.Id = this.Id;
                 return target;
             }
+            
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
 
         class SampleStateElement : EntityStateElement<SampleEntity>
