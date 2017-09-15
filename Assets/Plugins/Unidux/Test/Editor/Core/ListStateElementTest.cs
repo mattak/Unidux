@@ -66,6 +66,11 @@ namespace Unidux
 
                 return false;
             }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
     }
 }
