@@ -17,5 +17,14 @@ namespace Unidux.Util
 
             return defaultValue;
         }
+
+        public static TValue GetOrNull<TKey, TValue>(
+            this IDictionary<TKey, TValue> dictionary,
+            TKey key
+        )
+            where TValue : class
+        {
+            return dictionary.ContainsKey(key) ? dictionary[key] : null;
+        }
     }
 }
