@@ -4,4 +4,22 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Base.unity
+    guid: 2955624a797bc4a298468737c17d3fd7
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Content1.unity
+    guid: 50ee7185339c842f3a66a1f2bea94227
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Content2.unity
+    guid: 77a6c2ce0b86e4790bc21f78b7853bce
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Footer.unity
+    guid: 58c1ba16c9f534ed4b4a7cc67effef17
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Header.unity
+    guid: e44d85cafc02d480cbefc42b9edb28a3
+  - enabled: 1
+    path: Assets/Plugins/Unidux/Examples/SceneTransition/Modal.unity
+    guid: 31c09117f7320408596ae4158673b165
