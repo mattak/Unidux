@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using Unidux.Util;
@@ -43,7 +44,6 @@ namespace Unidux.Experimental.Editor
                 // XXX: it might be slow and should be updated less frequency.
                 if (dirty)
                 {
-                    UnityEngine.Debug.Log("dirty");
                     _store.StoreObject.ObjectState = this._newState;
                     this._newState = null;
                 }
@@ -131,7 +131,7 @@ namespace Unidux.Experimental.Editor
             else if (type.IsEnum)
             {
                 string[] _choices = Enum.GetNames(type);
-                var oldValue = (int)element;
+                var oldValue = (int) element;
                 var newValue = EditorGUILayout.Popup(name, oldValue, _choices);
                 dirty |= (oldValue != newValue);
 
@@ -206,7 +206,7 @@ namespace Unidux.Experimental.Editor
             return name;
         }
 
-        string GetFoldingKey(List<string> rootNames)
+        string GetFoldingKey(IEnumerable<string> rootNames)
         {
             return string.Join(".", rootNames.ToArray());
         }
@@ -224,8 +224,9 @@ namespace Unidux.Experimental.Editor
             if (this._foldingMap[foldingKey])
             {
                 var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
+                var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
-                if (fields.Length <= 0)
+                if (fields.Length <= 0 && properties.Length <= 0)
                 {
                     EditorGUILayout.HelpBox(new StringBuilder(name).Append(" has no properties").ToString(),
                         MessageType.Info);
@@ -233,10 +234,12 @@ namespace Unidux.Experimental.Editor
                 else
                 {
                     EditorGUILayout.BeginVertical(GUI.skin.box);
+                    
                     foreach (var field in fields)
                     {
                         var value = field.GetValue(element);
                         var valueType = field.FieldType;
+                        
                         dirty |= RenderObject(
                             rootNames,
                             field.Name,
@@ -244,6 +247,23 @@ namespace Unidux.Experimental.Editor
                             value,
                             newValue => field.SetValue(element, newValue));
                     }
+
+                    foreach (var property in properties)
+                    {
+                        if (property.CanRead && property.CanWrite)
+                        {
+                            var value = property.GetValue(element, null);
+                            var valueType = property.PropertyType;
+
+                            dirty |= RenderObject(
+                                rootNames,
+                                property.Name,
+                                valueType,
+                                value,
+                                newValue => property.SetValue(element, newValue, null));
+                        }
+                    }
+
                     EditorGUILayout.EndVertical();
                 }
             }
@@ -324,11 +344,6 @@ namespace Unidux.Experimental.Editor
                             dictionary[key],
                             newValue => dictionary[key] = newValue
                         );
-                    }
-
-                    if (dirty)
-                    {
-                        UnityEngine.Debug.Log("Dictionary is dirty");
                     }
 
                     EditorGUILayout.EndVertical();
