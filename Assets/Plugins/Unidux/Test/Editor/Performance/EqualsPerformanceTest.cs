@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
-using Unidux.Util;
 
 namespace Unidux.Performance
 {
@@ -64,11 +63,10 @@ namespace Unidux.Performance
             public bool CustomEquals(object targetObject)
             {
                 var target = (SampleState) targetObject;
-
-                return CustomListEquqls(target.List);
+                return CustomListEquals(target.List);
             }
 
-            private bool CustomListEquqls(List<SampleEntity> targets)
+            private bool CustomListEquals(List<SampleEntity> targets)
             {
                 if (this.List.Count != targets.Count)
                 {
