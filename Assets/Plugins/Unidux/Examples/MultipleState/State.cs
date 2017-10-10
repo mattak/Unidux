@@ -16,10 +16,18 @@ namespace Unidux.Example.MultipleState
         public float FloatValue = 0;
         public double DoubleValue = 0;
         public bool BoolValue = false;
+        public Friend AnimalFriend = Friend.ServalCat;
+        
+        public int? NullableIntValue = null;
+        public uint? NullableUintValue = null;
+        public long? NullableLongValue = null;
+        public ulong? NullableUlongValue = null;
+        public float? NullableFloatValue = null;
+        public double? NullableDoubleValue = null;
+        public bool? NullableBoolValue = null;
+        public Friend? NullableAnimalFriend = null;
 
         public string StringValue = null;
-        public Friend AnimalFriend = Friend.ServalCat;
-
         public Color ColorValue = Color.black;
         public Vector2 Vector2Value = Vector2.zero;
         public Vector3 Vector3Value = Vector3.zero;
