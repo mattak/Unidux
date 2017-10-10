@@ -60,111 +60,16 @@ namespace Unidux.Experimental.Editor
         {
             bool dirty = false;
 
-            // PRIMITIVE
-            if (element is int)
+            // struct
+            if (type.IsValueType)
             {
-                var oldValue = (int) element;
-                var newValue = EditorGUILayout.IntField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
+                dirty |= this.RenderValue(rootNames, name, type, element, setter);
             }
-            else if (element is uint)
-            {
-                var oldValue = (int) ((uint) element);
-                var newValue = EditorGUILayout.IntField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (newValue < 0) Debug.LogWarning("Illeagal uint value setted: " + newValue);
-                else if (dirty) setter((uint) newValue);
-            }
-            else if (element is float)
-            {
-                var oldValue = (float) element;
-                var newValue = EditorGUILayout.FloatField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is double)
-            {
-                var oldValue = (double) element;
-                var newValue = EditorGUILayout.DoubleField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is long)
-            {
-                var oldValue = (long) element;
-                var newValue = EditorGUILayout.LongField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is ulong)
-            {
-                var oldValue = (long) ((ulong) element);
-                var newValue = EditorGUILayout.LongField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (newValue < 0) Debug.LogWarning("Illeagal ulong value setted: " + newValue);
-                else if (dirty) setter((ulong) newValue);
-            }
-            else if (element is bool)
-            {
-                var oldValue = (bool) element;
-                var newValue = EditorGUILayout.Toggle(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            // NON PRIMITIVE
+            // non struct
             else if (type == typeof(string))
             {
                 var oldValue = (element as string);
                 var newValue = EditorGUILayout.TextField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (type.IsEnum)
-            {
-                string[] _choices = Enum.GetNames(type);
-                var oldValue = (int) element;
-                var newValue = EditorGUILayout.Popup(name, oldValue, _choices);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is Color)
-            {
-                var oldValue = (Color) element;
-                var newValue = EditorGUILayout.ColorField(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is Vector2)
-            {
-                var oldValue = (Vector2) element;
-                var newValue = EditorGUILayout.Vector2Field(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is Vector3)
-            {
-                var oldValue = (Vector3) element;
-                var newValue = EditorGUILayout.Vector3Field(name, oldValue);
-                dirty |= (oldValue != newValue);
-
-                if (dirty) setter(newValue);
-            }
-            else if (element is Vector4)
-            {
-                var oldValue = (Vector4) element;
-                var newValue = EditorGUILayout.Vector4Field(name, oldValue);
                 dirty |= (oldValue != newValue);
 
                 if (dirty) setter(newValue);
@@ -211,6 +116,190 @@ namespace Unidux.Experimental.Editor
             return string.Join(".", rootNames.ToArray());
         }
 
+        bool RenderValue(
+            List<string> rootNames,
+            string name,
+            Type type,
+            object element,
+            Action<object> setter
+        )
+        {
+            bool dirty = false;
+
+            if (type == typeof(int?))
+            {
+                var oldValue = (int?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseInt();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is int)
+            {
+                var oldValue = (int) element;
+                var newValue = EditorGUILayout.IntField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (type == typeof(uint?))
+            {
+                var oldValue = (uint?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseUInt();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is uint)
+            {
+                var oldValue = (int) ((uint) element);
+                var newValue = EditorGUILayout.IntField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (newValue < 0) Debug.LogWarning("Illeagal uint value setted: " + newValue);
+                else if (dirty) setter((uint) newValue);
+            }
+            else if (type == typeof(float?))
+            {
+                var oldValue = (float?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseFloat();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is float)
+            {
+                var oldValue = (float) element;
+                var newValue = EditorGUILayout.FloatField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (type == typeof(double?))
+            {
+                var oldValue = (double?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseDouble();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is double)
+            {
+                var oldValue = (double) element;
+                var newValue = EditorGUILayout.DoubleField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (type == typeof(long?))
+            {
+                var oldValue = (long?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseLong();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is long)
+            {
+                var oldValue = (long) element;
+                var newValue = EditorGUILayout.LongField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (type == typeof(ulong?))
+            {
+                var oldValue = (ulong?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                var newValue = newValueString.ParseULong();
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is ulong)
+            {
+                var oldValue = (long) ((ulong) element);
+                var newValue = EditorGUILayout.LongField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (newValue < 0) Debug.LogWarning("Illeagal ulong value setted: " + newValue);
+                else if (dirty) setter((ulong) newValue);
+            }
+            else if (type == typeof(bool?))
+            {
+                var oldValue = (bool?) element;
+                var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
+                var newValueString = EditorGUILayout.DelayedTextField(name, oldValueString);
+                bool? newValue = newValueString.ParseBool();
+
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is bool)
+            {
+                var oldValue = (bool) element;
+                var newValue = EditorGUILayout.Toggle(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (type.IsEnum)
+            {
+                string[] _choices = Enum.GetNames(type);
+                var oldValue = (int) element;
+                var newValue = EditorGUILayout.Popup(name, oldValue, _choices);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is Color)
+            {
+                var oldValue = (Color) element;
+                var newValue = EditorGUILayout.ColorField(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is Vector2)
+            {
+                var oldValue = (Vector2) element;
+                var newValue = EditorGUILayout.Vector2Field(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is Vector3)
+            {
+                var oldValue = (Vector3) element;
+                var newValue = EditorGUILayout.Vector3Field(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+            else if (element is Vector4)
+            {
+                var oldValue = (Vector4) element;
+                var newValue = EditorGUILayout.Vector4Field(name, oldValue);
+                dirty |= (oldValue != newValue);
+
+                if (dirty) setter(newValue);
+            }
+
+            return dirty;
+        }
+
         bool RenderClass(List<string> rootNames, string name, Type type, object element)
         {
             bool dirty = false;
@@ -234,12 +323,12 @@ namespace Unidux.Experimental.Editor
                 else
                 {
                     EditorGUILayout.BeginVertical(GUI.skin.box);
-                    
+
                     foreach (var field in fields)
                     {
                         var value = field.GetValue(element);
                         var valueType = field.FieldType;
-                        
+
                         dirty |= RenderObject(
                             rootNames,
                             field.Name,
