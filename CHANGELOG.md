@@ -1,3 +1,19 @@
+# 2017-10-11 v0.3.2
+
+Features
+- Create default Equals implementation (#95)
+- Optimize clone performance (#104)
+- Create base class patterns of StateElement (#103)
+
+Bug Fixes
+- Bugs of Enum selection on StateEditor (#105)
+- Show uint? on StateEditor (#114)
+
+Etc
+- REST example (#94)
+- Divide core logic to different folder (#111)
+- Create scene transition example (#15)
+
 # 2017-09-06 v0.3.1
 
 Breaking Changes
