@@ -19,7 +19,7 @@ namespace Unidux.Example.SceneTransition
 
         void Render(State state)
         {
-            this.GetComponent<Text>().text = state.Page.CurrentPage.ToString();
+            this.GetComponent<Text>().text = state.Page.Current.Page.ToString();
         }
     }
 }

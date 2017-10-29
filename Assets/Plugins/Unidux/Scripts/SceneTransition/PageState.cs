@@ -7,27 +7,27 @@ namespace Unidux.SceneTransition
     [Serializable]
     public class PageState<TPage> : StateElement, ICloneable where TPage : struct
     {
-        // XXX: System.Collections.Generic.Stack is not visible on UniduxEditorStateTab, because it's not writable on dynamically. So use IList instead of Stack now,
+        // TODO: change typw from IList to Stack 
         public readonly IList<IPageEntity<TPage>> Stack = new List<IPageEntity<TPage>>();
 
         public IPageEntity<TPage> Current
         {
-            get { return this.Stack.Last(); }
+            get { return this.Stack.Count > 0 ? this.Stack.Last() : null; }
         }
 
-        public TPage CurrentPage
+        public string Name
         {
-            get { return this.Current.Page; }
+            get { return this.Stack.Count > 0 ? this.Current.Page.ToString() : "-"; }
         }
 
-        public IPageData CurrentData
+        public IPageData Data
         {
-            get { return this.Current.Data; }
+            get { return this.Current != null ? this.Current.Data : null; }
         }
 
-        public TData GetCurrentData<TData>() where TData : IPageData
+        public TData GetData<TData>() where TData : IPageData
         {
-            return (TData) this.CurrentData;
+            return (TData) this.Current.Data;
         }
 
         public bool IsReady
@@ -41,31 +41,17 @@ namespace Unidux.SceneTransition
 
         public PageState(PageState<TPage> state)
         {
-            foreach(var page in state.Stack)
+            foreach (var page in state.Stack)
             {
                 this.Stack.Add(page);
             }
+
+            this.SetStateChanged(state.IsStateChanged);
         }
 
         public object Clone()
         {
             return new PageState<TPage>(this);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is PageState<TPage>)
-            {
-                var target = (PageState<TPage>) obj;
-                return this.Stack.SequenceEqual(target.Stack);
-            }
-
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
     }
 }
