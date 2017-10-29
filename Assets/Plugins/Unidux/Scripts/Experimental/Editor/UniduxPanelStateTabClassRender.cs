@@ -71,7 +71,7 @@ namespace Unidux.Experimental.Editor
                 else
                 {
                     EditorGUILayout.BeginVertical(GUI.skin.box);
-
+                    
                     foreach (var field in fields)
                     {
                         var value = field.GetValue(element);
@@ -138,6 +138,7 @@ namespace Unidux.Experimental.Editor
                     var renderer = this.SelectObjectRenderer(valueType, dictionary[keys[0]]);
 
                     this.RenderPager(
+                        "dictionary",
                         foldingKey,
                         keys,
                         (key, index) =>
@@ -187,6 +188,7 @@ namespace Unidux.Experimental.Editor
                     var render = this.SelectObjectRenderer(valueType, list[0]);
 
                     this.RenderPager(
+                        "list",
                         foldingKey,
                         list,
                         (value, index) =>
@@ -239,6 +241,7 @@ namespace Unidux.Experimental.Editor
                     var render = this.SelectObjectRenderer(valueType, _firstValue);
 
                     this.RenderPager(
+                        "collection",
                         foldingKey,
                         list,
                         (value, index) =>

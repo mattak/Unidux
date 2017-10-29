@@ -9,11 +9,11 @@ namespace Unidux.Experimental.Editor
 {
     public partial class UniduxPanelStateTab
     {
-        protected Func6<List<string>, string, object, Type, Action<object>, bool> SelectValueRender(Type type, object element)
+        protected Func6<IList<string>, string, object, Type, Action<object>, bool> SelectValueRender(Type type, object element)
         {
             if (type == typeof(int?))
             {
-                return this.RenderUInt;
+                return this.RenderNullableInt;
             }
             else if (element is int)
             {
@@ -91,13 +91,13 @@ namespace Unidux.Experimental.Editor
             return this.RenderUnknown;
         }
 
-        protected bool RenderUnknown(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderUnknown(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             EditorGUILayout.HelpBox(new StringBuilder(name).Append(" is empty").ToString(), MessageType.Info);
             return false;
         }
 
-        protected bool RenderNullableInt(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableInt(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (int?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -110,7 +110,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderInt(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderInt(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (int) element;
             var newValue = EditorGUILayout.DelayedIntField(name, oldValue);
@@ -120,7 +120,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullabelUInt(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullabelUInt(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (uint?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -132,7 +132,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderUInt(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderUInt(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (int) ((uint) element);
             var newValue = EditorGUILayout.DelayedIntField(name, oldValue);
@@ -144,7 +144,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullableFloat(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableFloat(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (float?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -156,7 +156,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderFloat(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderFloat(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (float) element;
             var newValue = EditorGUILayout.DelayedFloatField(name, oldValue);
@@ -166,7 +166,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullableDouble(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableDouble(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (double?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -178,7 +178,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderDouble(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderDouble(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (float) element;
             var newValue = EditorGUILayout.DelayedDoubleField(name, oldValue);
@@ -188,7 +188,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullableLong(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableLong(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (long?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -200,7 +200,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderLong(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderLong(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (long) element;
             var newValue = EditorGUILayout.LongField(name, oldValue);
@@ -210,7 +210,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullableULong(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableULong(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (ulong?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -222,7 +222,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderULong(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderULong(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (long) ((ulong) element);
             var newValue = EditorGUILayout.LongField(name, oldValue);
@@ -233,7 +233,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderNullableBool(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderNullableBool(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (bool?) element;
             var oldValueString = oldValue.HasValue ? oldValue.Value.ToString() : "null";
@@ -246,7 +246,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderBool(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderBool(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (bool) element;
             var newValue = EditorGUILayout.Toggle(name, oldValue);
@@ -256,7 +256,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderEnum(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderEnum(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             string[] _choices = Enum.GetNames(type);
             var oldValue = (int) element;
@@ -267,7 +267,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderColor(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderColor(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (Color) element;
             var newValue = EditorGUILayout.ColorField(name, oldValue);
@@ -277,7 +277,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderVector2(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderVector2(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (Vector2) element;
             var newValue = EditorGUILayout.Vector2Field(name, oldValue);
@@ -287,7 +287,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderVector3(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderVector3(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (Vector3) element;
             var newValue = EditorGUILayout.Vector3Field(name, oldValue);
@@ -297,7 +297,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        protected bool RenderVector4(List<string> _, string name, object element, Type type, Action<object> setter)
+        protected bool RenderVector4(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (Vector4) element;
             var newValue = EditorGUILayout.Vector4Field(name, oldValue);

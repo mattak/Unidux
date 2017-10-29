@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unidux.Example.Counter;
 using Unidux.Util;
 using UniRx;
 using UnityEditor;
@@ -17,12 +16,10 @@ namespace Unidux.Experimental.Editor
 
         private Vector2 _scrollPosition = Vector2.zero;
         private Dictionary<string, bool> _foldingMap = new Dictionary<string, bool>();
-
         private Dictionary<string, int> _pageMap = new Dictionary<string, int>();
-
         private object _newState = null;
         private ISubject<object> _stateSubject;
-        private const int PerPage = 100;
+        private const int PerPage = 10;
 
         public void Render(IStoreAccessor _store)
         {
@@ -34,7 +31,7 @@ namespace Unidux.Experimental.Editor
 
             // scrollview of state
             {
-                this._scrollPosition = EditorGUILayout.BeginScrollView(this._scrollPosition, GUI.skin.box);
+                this._scrollPosition = EditorGUILayout.BeginScrollView(this._scrollPosition);
                 var state = _store.StoreObject.ObjectState;
                 var names = new List<string>();
                 var type = state.GetType();
@@ -56,21 +53,24 @@ namespace Unidux.Experimental.Editor
             }
         }
 
-        Func6<List<string>, string, object, Type, Action<object>, bool> SelectObjectRenderer(Type type, object element)
+        Func6<IList<string>, string, object, Type, Action<object>, bool> SelectObjectRenderer(Type type, object element)
         {
-            // struct
+            Func6<IList<string>, string, object, Type, Action<object>, bool> render;
+
             if (type.IsValueType)
             {
-                return this.SelectValueRender(type, element);
+                render = this.SelectValueRender(type, element);
             }
             else
             {
-                return this.SelectClassRender(type, element);
+                render = this.SelectClassRender(type, element);
             }
+
+            return render;
         }
 
         bool RenderObject(
-            List<string> rootNames,
+            IList<string> rootNames,
             string name,
             object element,
             Type type,
@@ -80,20 +80,27 @@ namespace Unidux.Experimental.Editor
             return this.SelectObjectRenderer(type, element)(rootNames, name, element, type, setter);
         }
 
-        int RenderPagerContent(
+        int RenderPager(
+            string pagerName,
             string foldingKey,
             System.Collections.ICollection collection,
-            Action<object, int> renderValueWithIndex
+            Action<object, int> renderValueWithIndex,
+            bool disable = false
         )
         {
             var listSize = collection.Count;
             var page = this._pageMap.GetOrDefault(foldingKey, 0);
             var lastPage = (listSize - 1) / PerPage;
-            page = this.RenderPagerHeader(page, lastPage);
+            page = this.RenderPagerHeader(pagerName, page, lastPage);
             this._pageMap[foldingKey] = page;
 
             var startIndex = page * PerPage;
             var endIndex = Math.Min((page + 1) * PerPage, listSize);
+
+            if (disable)
+            {
+                EditorGUI.BeginDisabledGroup(true);
+            }
 
             var i = 0;
             foreach (var element in collection)
@@ -106,14 +113,25 @@ namespace Unidux.Experimental.Editor
                 i++;
             }
 
+            if (disable)
+            {
+                EditorGUI.EndDisabledGroup();
+            }
+
             return page;
         }
 
         int RenderPagerHeader(
+            string pagerName,
             int page,
             int lastPage
         )
         {
+            if (lastPage < 1)
+            {
+                return page;
+            }
+            
             bool hasPrev = page > 0;
             bool hasNext = lastPage > page;
 
@@ -121,6 +139,10 @@ namespace Unidux.Experimental.Editor
 
             {
                 EditorGUI.BeginDisabledGroup(!hasPrev);
+                if (GUILayout.Button("<<<") && hasPrev)
+                {
+                    page -= 100;
+                }
                 if (GUILayout.Button("<<") && hasPrev)
                 {
                     page -= 10;
@@ -132,7 +154,7 @@ namespace Unidux.Experimental.Editor
                 EditorGUI.EndDisabledGroup();
             }
 
-            page = EditorGUILayout.IntField("page", page);
+            page = EditorGUILayout.IntField(pagerName, page);
             EditorGUILayout.LabelField("/" + lastPage);
 
             {
@@ -144,6 +166,10 @@ namespace Unidux.Experimental.Editor
                 if (GUILayout.Button(">>") && hasNext)
                 {
                     page += 10;
+                }
+                if (GUILayout.Button(">>>") && hasNext)
+                {
+                    page += 100;
                 }
                 EditorGUI.EndDisabledGroup();
             }
