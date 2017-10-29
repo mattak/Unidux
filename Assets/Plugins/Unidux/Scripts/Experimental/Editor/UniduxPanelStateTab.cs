@@ -32,13 +32,20 @@ namespace Unidux.Experimental.Editor
             // scrollview of state
             {
                 this._scrollPosition = EditorGUILayout.BeginScrollView(this._scrollPosition);
+
+                if (!(_store.StoreObject.ObjectState is ICloneable))
+                {
+                    EditorGUILayout.HelpBox("Please inplement ICloneable on State", MessageType.Warning);
+                    return;
+                }
+                
                 var state = _store.StoreObject.ObjectState;
                 var names = new List<string>();
                 var type = state.GetType();
 
                 if (!state.Equals(this._newState))
                 {
-                    this._newState = CloneUtil.MemoryClone(state);
+                    this._newState = ((ICloneable)state).Clone();
                 }
 
                 var dirty = this.RenderObject(names, state.GetType().Name, this._newState, type, _ => { });
