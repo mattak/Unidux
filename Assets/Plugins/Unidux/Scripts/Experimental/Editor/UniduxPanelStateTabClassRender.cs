@@ -65,43 +65,60 @@ namespace Unidux.Experimental.Editor
 
                 if (fields.Length <= 0 && properties.Length <= 0)
                 {
-                    EditorGUILayout.HelpBox(new StringBuilder(name).Append(" has no properties").ToString(),
+                    EditorGUILayout.HelpBox(new StringBuilder(name).Append(" has no properties or fields").ToString(),
                         MessageType.Info);
                 }
                 else
                 {
-                    EditorGUILayout.BeginVertical(GUI.skin.box);
-                    
-                    foreach (var field in fields)
+                    if (fields.Length > 0)
                     {
-                        var value = field.GetValue(element);
-                        var valueType = field.FieldType;
+                        EditorGUILayout.BeginVertical(GUI.skin.box);
 
-                        dirty |= RenderObject(
-                            rootNames,
-                            field.Name,
-                            value,
-                            valueType,
-                            newValue => field.SetValue(element, newValue));
-                    }
-
-                    foreach (var property in properties)
-                    {
-                        if (property.CanRead && property.CanWrite)
+                        this.RenderPager("fields", foldingKey, fields, (_field, index) =>
                         {
-                            var value = property.GetValue(element, null);
-                            var valueType = property.PropertyType;
+                            var field = (FieldInfo) _field;
+                            var value = field.GetValue(element);
+                            var valueType = field.FieldType;
 
                             dirty |= RenderObject(
                                 rootNames,
-                                property.Name,
+                                field.Name,
                                 value,
                                 valueType,
-                                newValue => property.SetValue(element, newValue, null));
-                        }
+                                newValue => field.SetValue(element, newValue));
+                        });
+
+                        EditorGUILayout.EndVertical();
                     }
 
-                    EditorGUILayout.EndVertical();
+                    if (properties.Length > 0)
+                    {
+                        EditorGUILayout.BeginVertical(GUI.skin.box);
+
+                        this.RenderPager("properties", foldingKey, properties, (_property, index) =>
+                        {
+                            var property = (PropertyInfo) _property;
+
+                            if (element != null)
+                            {
+                                var value = property.GetValue(element, null);
+                                var valueType = property.PropertyType;
+
+                                dirty |= RenderObject(
+                                    rootNames,
+                                    property.Name,
+                                    value,
+                                    valueType,
+                                    newValue => property.SetValue(element, newValue, null));
+                            }
+                            else
+                            {
+                                EditorGUILayout.LabelField("null");
+                            }
+                        });
+
+                        EditorGUILayout.EndVertical();
+                    }
                 }
             }
 

@@ -154,8 +154,9 @@ namespace Unidux.Experimental.Editor
                 EditorGUI.EndDisabledGroup();
             }
 
-            page = EditorGUILayout.IntField(pagerName, page);
-            EditorGUILayout.LabelField("/" + lastPage);
+            EditorGUILayout.LabelField(pagerName, GUILayout.MinWidth(30));
+            page = EditorGUILayout.IntField(page, GUILayout.MinWidth(30));
+            EditorGUILayout.LabelField("/" + lastPage, GUILayout.MinWidth(30));
 
             {
                 EditorGUI.BeginDisabledGroup(!hasNext);
