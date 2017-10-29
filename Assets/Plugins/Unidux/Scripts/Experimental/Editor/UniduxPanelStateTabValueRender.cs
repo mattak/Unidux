@@ -180,7 +180,7 @@ namespace Unidux.Experimental.Editor
 
         protected bool RenderDouble(IList<string> _, string name, object element, Type type, Action<object> setter)
         {
-            var oldValue = (float) element;
+            var oldValue = (double) element;
             var newValue = EditorGUILayout.DelayedDoubleField(name, oldValue);
             var dirty = (oldValue != newValue);
 
