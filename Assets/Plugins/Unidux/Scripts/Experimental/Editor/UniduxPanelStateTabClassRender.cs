@@ -51,6 +51,7 @@ namespace Unidux.Experimental.Editor
             rootNames.Add(name);
 
             bool dirty = false;
+            
             var foldingKey = this.GetFoldingKey(rootNames);
 
             this._foldingMap[foldingKey] = EditorGUILayout.Foldout(
@@ -73,8 +74,10 @@ namespace Unidux.Experimental.Editor
                     if (fields.Length > 0)
                     {
                         EditorGUILayout.BeginVertical(GUI.skin.box);
+                        rootNames.Add("fields");
+                        var fieldFoldingKey = this.GetFoldingKey(rootNames);
 
-                        this.RenderPager("fields", foldingKey, fields, (_field, index) =>
+                        this.RenderPager("fields", fieldFoldingKey, fields, (_field, index) =>
                         {
                             var field = (FieldInfo) _field;
                             var value = field.GetValue(element);
@@ -87,15 +90,18 @@ namespace Unidux.Experimental.Editor
                                 valueType,
                                 newValue => field.SetValue(element, newValue));
                         });
-
+                        
+                        rootNames.RemoveLast();
                         EditorGUILayout.EndVertical();
                     }
 
                     if (properties.Length > 0)
                     {
                         EditorGUILayout.BeginVertical(GUI.skin.box);
+                        rootNames.Add("properties");
+                        var propertyFoldingKey = this.GetFoldingKey(rootNames);
 
-                        this.RenderPager("properties", foldingKey, properties, (_property, index) =>
+                        this.RenderPager("properties", propertyFoldingKey, properties, (_property, index) =>
                         {
                             var property = (PropertyInfo) _property;
 
@@ -117,6 +123,7 @@ namespace Unidux.Experimental.Editor
                             }
                         });
 
+                        rootNames.RemoveLast();
                         EditorGUILayout.EndVertical();
                     }
                 }
