@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Unidux.Example.Middlewares
 {
-    public class Unidux : SingletonMonoBehaviour<Unidux>
+    public class Unidux : SingletonMonoBehaviour<Unidux>, IStoreAccessor
     {
         public TextAsset InitialStateJson;
 
