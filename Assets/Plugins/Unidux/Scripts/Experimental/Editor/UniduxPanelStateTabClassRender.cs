@@ -11,7 +11,7 @@ namespace Unidux.Experimental.Editor
 {
     public partial class UniduxPanelStateTab
     {
-        Func6<List<string>, string, object, Type, Action<object>, bool> SelectClassRender(Type type, object element)
+        Func6<IList<string>, string, object, Type, Action<object>, bool> SelectClassRender(Type type, object element)
         {
             // non struct
             if (type == typeof(string))
@@ -26,13 +26,17 @@ namespace Unidux.Experimental.Editor
             {
                 return this.RenderList;
             }
+            else if (element is ICollection)
+            {
+                return this.RenderCollection;
+            }
             else
             {
                 return this.RenderClass;
             }
         }
 
-        bool RenderString(List<string> rootNames, string name, object element, Type type, Action<object> setter)
+        bool RenderString(IList<string> rootNames, string name, object element, Type type, Action<object> setter)
         {
             var oldValue = (element as string);
             var newValue = EditorGUILayout.TextField(name, oldValue);
@@ -42,7 +46,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        bool RenderClass(List<string> rootNames, string name, object element, Type type, Action<object> setter)
+        bool RenderClass(IList<string> rootNames, string name, object element, Type type, Action<object> setter)
         {
             rootNames.Add(name);
 
@@ -105,7 +109,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        bool RenderDictionary(List<string> rootNames, string name, object element, Type type, Action<object> setter)
+        bool RenderDictionary(IList<string> rootNames, string name, object element, Type type, Action<object> setter)
         {
             rootNames.Add(name);
 
@@ -133,7 +137,7 @@ namespace Unidux.Experimental.Editor
                     IList keys = new ArrayList(dictionary.Keys);
                     var renderer = this.SelectObjectRenderer(valueType, dictionary[keys[0]]);
 
-                    this.RenderPagerContent(
+                    this.RenderPager(
                         foldingKey,
                         keys,
                         (key, index) =>
@@ -156,7 +160,7 @@ namespace Unidux.Experimental.Editor
             return dirty;
         }
 
-        bool RenderList(List<string> rootNames, string name, object element, Type type, Action<object> setter)
+        bool RenderList(IList<string> rootNames, string name, object element, Type type, Action<object> setter)
         {
             rootNames.Add(name);
 
@@ -182,7 +186,7 @@ namespace Unidux.Experimental.Editor
                     var valueType = list[0].GetType();
                     var render = this.SelectObjectRenderer(valueType, list[0]);
 
-                    this.RenderPagerContent(
+                    this.RenderPager(
                         foldingKey,
                         list,
                         (value, index) =>
@@ -195,6 +199,59 @@ namespace Unidux.Experimental.Editor
                                 valueType,
                                 newValue => list[index] = newValue);
                         }
+                    );
+
+                    EditorGUILayout.EndVertical();
+                }
+            }
+
+            rootNames.RemoveLast();
+            return dirty;
+        }
+
+        bool RenderCollection(IList<string> rootNames, string name, object element, Type type, Action<object> setter)
+        {
+            rootNames.Add(name);
+
+            ICollection list = (ICollection) element;
+            bool dirty = false;
+            var foldingKey = this.GetFoldingKey(rootNames);
+
+            this._foldingMap[foldingKey] = EditorGUILayout.Foldout(
+                this._foldingMap.GetOrDefault(foldingKey, false),
+                this.GetFoldingName(rootNames, name)
+            );
+
+            if (this._foldingMap[foldingKey])
+            {
+                if (list.Count <= 0)
+                {
+                    EditorGUILayout.HelpBox(new StringBuilder(name).Append(" is empty").ToString(), MessageType.Info);
+                }
+                else
+                {
+                    EditorGUILayout.BeginVertical(GUI.skin.box);
+
+                    var enumerator = list.GetEnumerator();
+                    enumerator.MoveNext();
+                    var _firstValue = enumerator.Current;
+                    var valueType = _firstValue.GetType();
+                    var render = this.SelectObjectRenderer(valueType, _firstValue);
+
+                    this.RenderPager(
+                        foldingKey,
+                        list,
+                        (value, index) =>
+                        {
+                            var arrayName = new StringBuilder(name).Append("[").Append(index).Append("]").ToString();
+                            dirty |= render(
+                                rootNames,
+                                arrayName,
+                                value,
+                                valueType,
+                                newValue => { });
+                        },
+                        true
                     );
 
                     EditorGUILayout.EndVertical();
