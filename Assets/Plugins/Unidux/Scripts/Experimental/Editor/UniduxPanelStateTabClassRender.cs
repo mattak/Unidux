@@ -28,7 +28,7 @@ namespace Unidux.Experimental.Editor
             }
             else
             {
-                return RenderClass;
+                return this.RenderClass;
             }
         }
 
@@ -129,19 +129,24 @@ namespace Unidux.Experimental.Editor
                 else
                 {
                     EditorGUILayout.BeginVertical(GUI.skin.box);
+
                     IList keys = new ArrayList(dictionary.Keys);
                     var renderer = this.SelectObjectRenderer(valueType, dictionary[keys[0]]);
 
-                    foreach (var key in keys)
-                    {
-                        dirty |= renderer(
-                            rootNames,
-                            key.ToString(),
-                            dictionary[key],
-                            valueType,
-                            newValue => dictionary[key] = newValue
-                        );
-                    }
+                    this.RenderPagerContent(
+                        foldingKey,
+                        keys,
+                        (key, index) =>
+                        {
+                            dirty |= renderer(
+                                rootNames,
+                                key.ToString(),
+                                dictionary[key],
+                                valueType,
+                                newValue => dictionary[key] = newValue
+                            );
+                        }
+                    );
 
                     EditorGUILayout.EndVertical();
                 }
@@ -157,7 +162,6 @@ namespace Unidux.Experimental.Editor
 
             IList list = (IList) element;
             bool dirty = false;
-            var index = 0;
             var foldingKey = this.GetFoldingKey(rootNames);
 
             this._foldingMap[foldingKey] = EditorGUILayout.Foldout(
@@ -178,18 +182,21 @@ namespace Unidux.Experimental.Editor
                     var valueType = list[0].GetType();
                     var render = this.SelectObjectRenderer(valueType, list[0]);
 
-                    foreach (var value in list)
-                    {
-                        var arrayName = new StringBuilder(name).Append("[").Append(index).Append("]").ToString();
-                        dirty |= render(
-                            rootNames,
-                            arrayName,
-                            value,
-                            valueType,
-                            newValue => list[index] = newValue);
-                        index++;
-                    }
-                    
+                    this.RenderPagerContent(
+                        foldingKey,
+                        list,
+                        (value, index) =>
+                        {
+                            var arrayName = new StringBuilder(name).Append("[").Append(index).Append("]").ToString();
+                            dirty |= render(
+                                rootNames,
+                                arrayName,
+                                value,
+                                valueType,
+                                newValue => list[index] = newValue);
+                        }
+                    );
+
                     EditorGUILayout.EndVertical();
                 }
             }
