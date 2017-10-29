@@ -51,7 +51,7 @@ namespace Unidux.Experimental.Editor
             rootNames.Add(name);
 
             bool dirty = false;
-            
+
             var foldingKey = this.GetFoldingKey(rootNames);
 
             this._foldingMap[foldingKey] = EditorGUILayout.Foldout(
@@ -81,7 +81,7 @@ namespace Unidux.Experimental.Editor
                         {
                             var field = (FieldInfo) _field;
                             var value = field.GetValue(element);
-                            var valueType = field.FieldType;
+                            var valueType = (value != null) ? value.GetType() : field.FieldType;
 
                             dirty |= RenderObject(
                                 rootNames,
@@ -90,7 +90,7 @@ namespace Unidux.Experimental.Editor
                                 valueType,
                                 newValue => field.SetValue(element, newValue));
                         });
-                        
+
                         rootNames.RemoveLast();
                         EditorGUILayout.EndVertical();
                     }
@@ -99,6 +99,7 @@ namespace Unidux.Experimental.Editor
                     {
                         EditorGUILayout.BeginVertical(GUI.skin.box);
                         rootNames.Add("properties");
+
                         var propertyFoldingKey = this.GetFoldingKey(rootNames);
 
                         this.RenderPager("properties", propertyFoldingKey, properties, (_property, index) =>
@@ -108,14 +109,30 @@ namespace Unidux.Experimental.Editor
                             if (element != null)
                             {
                                 var value = property.GetValue(element, null);
-                                var valueType = property.PropertyType;
+                                var valueType = (value != null) ? value.GetType() : property.PropertyType;
+
+                                if (!property.CanWrite)
+                                {
+                                    EditorGUI.BeginDisabledGroup(true);
+                                }
 
                                 dirty |= RenderObject(
                                     rootNames,
                                     property.Name,
                                     value,
                                     valueType,
-                                    newValue => property.SetValue(element, newValue, null));
+                                    newValue =>
+                                    {
+                                        if (property.CanWrite)
+                                        {
+                                            property.SetValue(element, newValue, null);
+                                        }
+                                    });
+
+                                if (!property.CanWrite)
+                                {
+                                    EditorGUI.EndDisabledGroup();
+                                }
                             }
                             else
                             {
