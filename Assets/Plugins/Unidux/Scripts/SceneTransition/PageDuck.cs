@@ -144,7 +144,7 @@ namespace Unidux.SceneTransition
                     return pageState;
                 }
 
-                if (pageState.Stack.Any() && pageState.CurrentPage.Equals(action.Page))
+                if (pageState.Stack.Any() && pageState.Current.Page.Equals(action.Page))
                 {
                     Debug.LogWarning(
                         "Page pushing failed. Cannot push same page at once: " + action.Page);
@@ -219,7 +219,7 @@ namespace Unidux.SceneTransition
 
                 if (pageState.Stack.Any())
                 {
-                    var page = pageState.CurrentPage;
+                    var page = pageState.Current.Page;
 
                     if (!config.PageMap.ContainsKey(page))
                     {

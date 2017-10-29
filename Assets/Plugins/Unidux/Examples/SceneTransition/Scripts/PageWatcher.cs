@@ -20,7 +20,7 @@ namespace Unidux.Example.SceneTransition
 
         void UpdateScene(State state)
         {
-            if (state.Scene.NeedsAdjust(config.GetPageScenes(), config.PageMap[state.Page.CurrentPage]))
+            if (state.Scene.NeedsAdjust(config.GetPageScenes(), config.PageMap[state.Page.Current.Page]))
             {
                 Unidux.Dispatch(PageDuck<Page, Scene>.ActionCreator.Adjust());
             }

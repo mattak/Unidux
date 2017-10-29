@@ -29,8 +29,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page1, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page1, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -47,8 +47,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page1, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page1, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -64,8 +64,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page2, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page2, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(2, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -96,8 +96,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page1, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page1, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -114,8 +114,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page1, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page1, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -135,8 +135,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page1, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page1, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -153,8 +153,8 @@ namespace Unidux.SceneTransition
                 );
 
                 Assert.IsTrue(result.IsReady);
-                Assert.AreEqual(SamplePage.Page2, result.CurrentPage);
-                Assert.IsNull(result.CurrentData);
+                Assert.AreEqual(SamplePage.Page2, result.Current.Page);
+                Assert.IsNull(result.Current.Data);
                 Assert.AreEqual(1, result.Stack.Count);
 
                 Assert.AreEqual(2, sceneState.ActiveMap.Count);
@@ -230,7 +230,7 @@ namespace Unidux.SceneTransition
             {
                 Assert.IsTrue(pageState.IsReady);
                 Assert.AreEqual(1, pageState.Stack.Count);
-                Assert.AreNotEqual(new SamplePageData(2), pageState.CurrentData);
+                Assert.AreNotEqual(new SamplePageData(2), pageState.Current.Data);
 
                 var result = reducer.Reduce(
                     pageState,
@@ -239,7 +239,7 @@ namespace Unidux.SceneTransition
                 );
                 Assert.IsTrue(result.IsReady);
                 Assert.AreEqual(1, result.Stack.Count);
-                Assert.AreEqual(new SamplePageData(2), result.CurrentData);
+                Assert.AreEqual(new SamplePageData(2), result.Current.Data);
             }
         }
 
