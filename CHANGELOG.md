@@ -1,3 +1,12 @@
+# 2017-10-30 v0.3.3
+
+Features
+- Performance improvement of StateTab (#118)
+- Support Stack, Queue on StateEditor (#117)
+
+Bug Fixes
+- Render null class on StateEditor (#116)
+
 # 2017-10-11 v0.3.2
 
 Features
