@@ -6,8 +6,7 @@ Unidux is practical application architecture for Unity3D UI.
 
 It's inspired by Redux.
 
-# Install
-
+# Install 
 Import unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
 
 # Usage
@@ -311,6 +310,7 @@ class State : StateBase
 - [@austinmao](https://github.com/austinmao) for suggestion of Ducks and UniRx.
 - [@pine](https://github.com/pine) for description improvement.
 - [@jesstelford](https://github.com/jesstelford) for fix document.
+- [@tenmihi](https://github.com/tenmihi) for fix document.
 
 # License
 
