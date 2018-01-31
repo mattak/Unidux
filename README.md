@@ -166,13 +166,13 @@ public class CountRenderer : MonoBehaviour
 [RequireComponent(typeof(Button))]
 public class CountDispatcher : MonoBehaviour
 {
-    public Count.ActionType ActionType = Count.ActionType.Increment;
+    public Count.Action Action = Count.ActionCreator.Increment();
 
     void Start()
     {
         this.GetComponent<Button>()
             .OnClickAsObservable()
-            .Subscribe(state => Unidux.Store.Dispatch(ActionType))
+            .Subscribe(state => Unidux.Store.Dispatch(Action))
             .AddTo(this)
             ;
     }
