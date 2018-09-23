@@ -72,7 +72,7 @@ namespace Unidux.Example.SimpleHttp
             {
                 UnityWebRequest getRequest = UnityWebRequest.Get(url);
 
-                yield return getRequest.Send();
+                yield return getRequest.SendWebRequest();
 
                 if (getRequest.isNetworkError)
                 {
@@ -80,7 +80,7 @@ namespace Unidux.Example.SimpleHttp
                 }
                 else
                 {
-                    var entity = new ResponseAction()
+                    var entity = new ResponseAction
                     {
                         Url = url,
                         Body = getRequest.downloadHandler.text,
