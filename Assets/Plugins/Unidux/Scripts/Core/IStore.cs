@@ -15,7 +15,7 @@ namespace Unidux
     public interface IStoreObject
     {
         object ObjectState { get; set; }
-        UniRx.IObservable<object> ObjectSubject { get; }
+        IObservable<object> ObjectSubject { get; }
         Type StateType { get; }
     }
 }

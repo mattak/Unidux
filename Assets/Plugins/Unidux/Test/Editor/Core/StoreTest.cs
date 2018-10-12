@@ -177,6 +177,6 @@ namespace Unidux
 
     public interface IObservablesGet
     {
-        UniRx.IObservable<Unit> Sample(Unit entity);
+        IObservable<Unit> Sample(Unit entity);
     }
 }
