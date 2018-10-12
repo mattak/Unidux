@@ -35,7 +35,7 @@ namespace Unidux
             set { this.State = (TState) value; }
         }
 
-        public UniRx.IObservable<object> ObjectSubject
+        public IObservable<object> ObjectSubject
         {
             get { return this.Subject.Select(it => (object) it); }
         }
