@@ -311,6 +311,7 @@ class State : StateBase
 - [@pine](https://github.com/pine) for description improvement.
 - [@jesstelford](https://github.com/jesstelford) for fix document.
 - [@tenmihi](https://github.com/tenmihi) for fix document.
+- [@kn1cht](https://github.com/kn1cht) for fix .net 4.0 runtime error.
 
 # License
 
