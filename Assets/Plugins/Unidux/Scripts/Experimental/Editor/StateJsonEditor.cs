@@ -7,6 +7,7 @@ namespace Unidux.Experimental.Editor
     public class StateJsonEditor
     {
         private const string FILE_EXTENSION = "json";
+        private const string PACKAGE_JSON = "package.json";
         private static StateJsonFileWrapper wrapper = null;
         private static bool selectionChanged = false;
 
@@ -33,7 +34,7 @@ namespace Unidux.Experimental.Editor
             if (Selection.activeObject != wrapper)
             {
                 string fn = AssetDatabase.GetAssetPath(Selection.activeInstanceID);
-                if (fn.ToLower().EndsWith(FILE_EXTENSION))
+                if (fn.ToLower().EndsWith(FILE_EXTENSION) && !fn.ToLower().EndsWith(PACKAGE_JSON))
                 {
                     if (wrapper == null)
                     {
