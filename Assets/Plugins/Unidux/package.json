@@ -1,0 +1,44 @@
+{
+  "name": "com.mattak.unidux",
+  "displayName": "Unidux",
+  "version": "0.3.4",
+  "unity": "2018.3",
+  "description": "Unidux is practical application architecture for Unity3D UI.",
+  "author": {
+    "name": "RUYAMA Takuma"
+  },
+  "dependencies": {
+    "com.neuecc.unirx": "7.1.0",
+    "com.unity.ext.nunit": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Counter",
+      "path": "Examples~/Counter"
+    },
+    {
+      "displayName": "List",
+      "path": "Examples~/List"
+    },
+    {
+      "displayName": "Todo",
+      "path": "Examples~/Todo"
+    },
+    {
+      "displayName": "Middlewares",
+      "path": "Examples~/Middlewares"
+    },
+    {
+      "displayName": "MultipleState",
+      "path": "Examples~/MultipleState"
+    },
+    {
+      "displayName": "SimpleHttp",
+      "path": "Examples~/SimpleHttp"
+    },
+    {
+      "displayName": "SceneTransition",
+      "path": "Examples~/SceneTransition"
+    }
+  ]
+}

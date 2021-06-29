@@ -7,7 +7,59 @@ Unidux is practical application architecture for Unity3D UI.
 It's inspired by Redux.
 
 # Install 
-Import unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
+
+## Unity Package
+
+- Import UniRx unitypackage from [latest releases](https://github.com/neuecc/UniRx/releases).
+- Import Unidux unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
+
+## UPM Package
+
+### UniRx
+
+<details>
+<summary>Add from OpenUPM <em>| via scoped registry, recommended</em></summary>
+
+To add OpenUPM to your project:
+
+- open `Edit/Project Settings/Package Manager`
+- add a new Scoped Registry:
+```
+Name: OpenUPM
+URL:  https://package.openupm.com/
+Scope(s): com.neuecc.unirx
+```
+- click <kbd>Save</kbd>
+- open Package Manager
+- Select ``My Registries`` in dropdown top left
+- Select ``UniRx`` and click ``Install``
+</details>
+
+<details>
+<summary>Add from GitHub | <em>not recommended, no updates through PackMan</em></summary>
+
+You can also add it directly from GitHub on Unity 2019.4+. Note that you won't be able to receive updates through Package Manager this way, you'll have to update manually.
+
+- open Package Manager
+- click <kbd>+</kbd>
+- select <kbd>Add from Git URL</kbd>
+- paste `https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts`
+- click <kbd>Add</kbd>
+</details>
+  
+### Unidux
+
+<details>
+<summary>Add from GitHub | <em>not recommended, no updates through PackMan</em></summary>
+
+You can also add it directly from GitHub on Unity 2019.4+. Note that you won't be able to receive updates through Package Manager this way, you'll have to update manually.
+
+- open Package Manager
+- click <kbd>+</kbd>
+- select <kbd>Add from Git URL</kbd>
+- paste `https://github.com/mattak/Unidux.git?path=Assets/Plugins/Unidux`
+- click <kbd>Add</kbd>
+</details>
 
 # Usage
 
