@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MiniJSON;
+using Unidux.Experimental.Editor.MiniJSON;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ namespace Unidux.Experimental.Editor
 
         public override void OnInspectorGUI()
         {
-            StateJsonFileWrapper wrapper = (StateJsonFileWrapper) target;
+            StateJsonFileWrapper wrapper = (StateJsonFileWrapper)target;
 
             RenderHeader(wrapper);
 
@@ -73,11 +73,13 @@ namespace Unidux.Experimental.Editor
                 {
                     System.Diagnostics.Process.Start("/usr/bin/open", wrapper.FileName);
                 }
+
                 if (GUILayout.Button("OpenDir", EditorStyles.miniButton))
                 {
                     System.Diagnostics.Process.Start("/usr/bin/open", Path.GetDirectoryName(wrapper.FileName));
                 }
             }
+
             EditorGUILayout.EndHorizontal();
         }
 
@@ -105,13 +107,13 @@ namespace Unidux.Experimental.Editor
                 else if (_value is long)
                 {
                     // XXX: There are no DelayedLongField
-                    long __value = (long) _value;
+                    long __value = (long)_value;
                     if (__value > int.MaxValue || __value < int.MinValue)
                     {
                         Debug.LogWarning("StateJsonEditor not handled long size value => " + __value);
                     }
 
-                    int value = (int) __value;
+                    int value = (int)__value;
                     int newValue = EditorGUILayout.DelayedIntField(key, value);
 
                     if (newValue != value)
@@ -122,7 +124,7 @@ namespace Unidux.Experimental.Editor
                 }
                 else if (_value is double)
                 {
-                    double value = (double) _value;
+                    double value = (double)_value;
                     double newValue = EditorGUILayout.DelayedDoubleField(key, value);
 
                     if (newValue != value)
@@ -133,7 +135,7 @@ namespace Unidux.Experimental.Editor
                 }
                 else if (_value is bool)
                 {
-                    bool value = (bool) _value;
+                    bool value = (bool)_value;
                     bool newValue = EditorGUILayout.Toggle(key, value);
 
                     if (newValue != value)
@@ -154,7 +156,7 @@ namespace Unidux.Experimental.Editor
 
                     if (ShouldFoldout(displayName, foldoutKey))
                     {
-                        dirty = RenderJsonArray(newParentsKey, key, (List<object>) _value);
+                        dirty = RenderJsonArray(newParentsKey, key, (List<object>)_value);
                     }
                 }
                 else if (_value is Dictionary<string, object>)
@@ -165,7 +167,7 @@ namespace Unidux.Experimental.Editor
 
                     if (ShouldFoldout(displayName, foldoutKey))
                     {
-                        dirty = RenderJsonDictionary(newParentsKey, (Dictionary<string, object>) _value);
+                        dirty = RenderJsonDictionary(newParentsKey, (Dictionary<string, object>)_value);
                     }
                 }
                 else
@@ -200,13 +202,13 @@ namespace Unidux.Experimental.Editor
                 else if (_value is long)
                 {
                     // XXX: There are no DelayedLongField
-                    long __value = (long) _value;
+                    long __value = (long)_value;
                     if (__value > int.MaxValue || __value < int.MinValue)
                     {
                         Debug.LogWarning("StateJsonEditor not handled long size value => " + __value);
                     }
 
-                    int value = (int) __value;
+                    int value = (int)__value;
                     int newValue = EditorGUILayout.DelayedIntField(key, value);
 
                     if (newValue != value)
@@ -217,7 +219,7 @@ namespace Unidux.Experimental.Editor
                 }
                 else if (_value is double)
                 {
-                    double value = (double) _value;
+                    double value = (double)_value;
                     double newValue = EditorGUILayout.DelayedDoubleField(key, value);
 
                     if (newValue != value)
@@ -228,7 +230,7 @@ namespace Unidux.Experimental.Editor
                 }
                 else if (_value is bool)
                 {
-                    bool value = (bool) _value;
+                    bool value = (bool)_value;
                     bool newValue = EditorGUILayout.Toggle(key, value);
 
                     if (newValue != value)
@@ -302,7 +304,7 @@ namespace Unidux.Experimental.Editor
 
         private string[] CreateParentsKey(string[] parentsKey, string key)
         {
-            if (parentsKey == null) return new string[] {key};
+            if (parentsKey == null) return new string[] { key };
             var list = new List<string>(parentsKey);
             list.Add(key);
             return list.ToArray();
@@ -316,7 +318,8 @@ namespace Unidux.Experimental.Editor
         private string CreateDisplayKey(string[] parentsKey)
         {
             if (parentsKey.Length == 1) return parentsKey[0];
-            return new StringBuilder(new string('.', parentsKey.Length-1)).Append(parentsKey.LastOrDefault()).ToString();
+            return new StringBuilder(new string('.', parentsKey.Length - 1)).Append(parentsKey.LastOrDefault())
+                .ToString();
         }
 
         private bool ShouldFoldout(string name, string foldoutKey)
