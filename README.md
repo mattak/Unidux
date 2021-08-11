@@ -7,7 +7,23 @@ Unidux is practical application architecture for Unity3D UI.
 It's inspired by Redux.
 
 # Install 
-Import unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
+
+## UPM 
+
+Add following two lines to `Pacakges/manifest.json`.
+
+```
+{
+ "com.neuecc.unirx": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
+ "me.mattak.unidux": "https://github.com/mattak/Unidux.git?path=Assets/Plugins/Unidux/Scripts",
+ // ...
+}
+```
+
+## Unity package
+
+No longer supported.
+If you need older versions, import unitypackage from [latest releases](https://github.com/mattak/Unidux/releases).
 
 # Usage
 
@@ -312,6 +328,7 @@ class State : StateBase
 - [@jesstelford](https://github.com/jesstelford) for fix document.
 - [@tenmihi](https://github.com/tenmihi) for fix document.
 - [@kn1cht](https://github.com/kn1cht) for fix .net 4.0 runtime error.
+- [@shiena](https://github.com/shiena) for upm support.
 
 # License
 
