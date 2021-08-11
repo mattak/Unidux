@@ -75,3 +75,7 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unity
+
+# remove locks
+# we dont need specific version dependency of unirx so remove it to avoiding conflict.
+packages-lock.json
