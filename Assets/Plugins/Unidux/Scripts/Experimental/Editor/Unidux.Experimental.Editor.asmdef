@@ -1,5 +1,5 @@
 {
-    "name": "Unity.",
+    "name": "Unidux.Experimental.Editor",
     "references": [
         "GUID:560b04d1a97f54a4e82edc0cbbb69285",
         "GUID:4555469b8b55943d3a4f8cf7b1acb2a4"
