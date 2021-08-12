@@ -9,7 +9,7 @@ namespace Unidux.Experimental.Editor
     {
         private const string DefaultStateJsonPath = "Assets/state.json";
         private const string JsonPathKey = "UniduxPanel.JsonSavePath";
-        
+
         public void Render(IStoreAccessor _store, ISerializeFactory serializer)
         {
             if (_store == null)
@@ -39,7 +39,8 @@ namespace Unidux.Experimental.Editor
             EditorGUILayout.BeginHorizontal();
             if (!existsJson && GUILayout.Button("Create"))
             {
-                jsonPath = EditorUtility.SaveFilePanel("Create empty json", "Assets", "state.json", "json");
+                // XXX: Unity cannot handle the extension including `.` character. such as `.unidux.json`. So we use `unidux_json`
+                jsonPath = EditorUtility.SaveFilePanel("Create empty json", "Assets", "state", "unidux_json");
                 jsonPath = ReplaceJsonPath(jsonPath);
                 if (!string.IsNullOrEmpty(jsonPath))
                 {
@@ -68,15 +69,16 @@ namespace Unidux.Experimental.Editor
                 var content = File.ReadAllBytes(jsonPath);
                 _store.StoreObject.ObjectState = serializer.Deserialize(content, _store.StoreObject.StateType);
             }
+
             EditorGUILayout.EndHorizontal();
         }
-        
+
         private string ReplaceJsonPath(string path)
         {
             var projectPath = Application.dataPath.Replace("Assets", "");
             return path.Replace(projectPath, "");
         }
-        
+
         private void RecordJsonPath(string path)
         {
             EditorPrefs.SetString(JsonPathKey, path);
