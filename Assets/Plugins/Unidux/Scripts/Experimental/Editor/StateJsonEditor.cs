@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Unidux.Experimental.Editor
@@ -6,7 +7,13 @@ namespace Unidux.Experimental.Editor
     [InitializeOnLoad]
     public class StateJsonEditor
     {
-        private const string FILE_EXTENSION = "json";
+        /// <summary>
+        /// Unidux specific extension is defined for avoiding conflicts of UnityEngine or the other assets json handling.
+        /// `.unidux_json` extension is defined for using EditorUtility.SaveFilePanel.
+        /// Because the function cannot handle double dot filename such as `.unidux.json`.
+        /// </summary>
+        private static readonly string[] FILE_EXTENSIONS = new[] { "unidux_json", "unidux.json" };
+
         private static StateJsonFileWrapper wrapper = null;
         private static bool selectionChanged = false;
 
@@ -33,7 +40,7 @@ namespace Unidux.Experimental.Editor
             if (Selection.activeObject != wrapper)
             {
                 string fn = AssetDatabase.GetAssetPath(Selection.activeInstanceID);
-                if (fn.ToLower().EndsWith(FILE_EXTENSION))
+                if (FILE_EXTENSIONS.Any(extension => fn.ToLower().EndsWith(extension)))
                 {
                     if (wrapper == null)
                     {
