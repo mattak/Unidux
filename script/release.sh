@@ -20,7 +20,10 @@ if [ "$(git status --short | wc -l | awk '{print $1}')" != "0" ]; then
   exit 1
 fi
 
-exit 0
+if git tag | grep "$VERSION" > /dev/null; then
+  echo "ERROR: already exists version tag $VERSION"
+  exit 1
+fi
 
 cat "$TARGET_PACKAGE_JSON" | jq --arg version "$VERSION" '.version = $version' > /tmp/package.json
 mv /tmp/package.json "$TARGET_PACKAGE_JSON"
